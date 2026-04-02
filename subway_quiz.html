@@ -252,7 +252,7 @@ function checkHintReset(){
 // ── LOAD STATIONS ──
 async function loadStations(){
   try {
-    const url = `https://corsproxy.io/?https://swopenapi.seoul.go.kr/api/subway/${API_KEY}/json/stationInfo/0/2000`;
+    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://swopenapi.seoul.go.kr/api/subway/${API_KEY}/json/stationInfo/0/2000`)}`;
     const res = await fetch(url);
     const data = await res.json();
     const rows = data.stationInfo || [];
