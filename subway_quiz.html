@@ -252,32 +252,9 @@ function checkHintReset(){
 // ── LOAD STATIONS ──
 async function loadStations(){
   try {
-    const apiUrl = `https://swopenapi.seoul.go.kr/api/subway/${API_KEY}/json/stationInfo/0/2000`;
-    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
-    const res = await fetch(url);
+    const res = await fetch('stations.json');
     const data = await res.json();
-    const rows = data.stationInfo || [];
-    if(rows.length === 0) throw new Error('empty');
-    const lineMap = {
-      '1호선':'1','2호선':'2','3호선':'3','4호선':'4','5호선':'5',
-      '6호선':'6','7호선':'7','8호선':'8','9호선':'9',
-      '공항철도':'A','경의중앙선':'B','경춘선':'C','분당선':'D','신분당선':'E','경강선':'G',
-    };
-    const byLine = {};
-    rows.forEach(r => {
-      const key = lineMap[r.LINE_NUM];
-      if(!key) return;
-      if(!byLine[key]) byLine[key] = [];
-      byLine[key].push({name: r.STATION_NM, order: parseInt(r.STATION_CD)||0});
-    });
-    Object.entries(byLine).forEach(([line, arr]) => {
-      arr.sort((a,b) => a.order - b.order);
-      arr.forEach((s,i) => {
-        const prev = i > 0 ? arr[i-1].name : '-';
-        const next = i < arr.length-1 ? arr[i+1].name : '-';
-        STATIONS.push([line, s.name, prev, next]);
-      });
-    });
+    STATIONS = data.filter(s => s[3] !== '-');
   } catch(e) {
     STATIONS = [...FALLBACK];
   }
