@@ -163,7 +163,7 @@
 
 <script>
 // ── CONFIG ──
-const API_KEY = '62746545436a6968313038636978424a';
+const API_KEY = '==';
 
 // ── LINES ──
 const LINES = {
@@ -252,7 +252,7 @@ function checkHintReset(){
 // ── LOAD STATIONS ──
 async function loadStations(){
   try {
-    const url = `https://api.allorigins.win/raw?url=https://swopenapi.seoul.go.kr/api/subway/62746545436a6968313038636978424a/json/stationInfo/0/2000`}`;
+    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://swopenapi.seoul.go.kr/api/subway/${API_KEY}/json/stationInfo/0/2000`)}`;
     const res = await fetch(url);
     const data = await res.json();
     const rows = data.stationInfo || [];
