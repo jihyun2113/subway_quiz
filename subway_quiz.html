@@ -252,12 +252,12 @@ function checkHintReset(){
 // ── LOAD STATIONS ──
 async function loadStations(){
   try {
-    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://swopenapi.seoul.go.kr/api/subway/${API_KEY}/json/stationInfo/0/2000`)}`;
+    const apiUrl = `https://swopenapi.seoul.go.kr/api/subway/${API_KEY}/json/stationInfo/0/2000`;
+    const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
     const res = await fetch(url);
     const data = await res.json();
     const rows = data.stationInfo || [];
     if(rows.length === 0) throw new Error('empty');
-
     const lineMap = {
       '1호선':'1','2호선':'2','3호선':'3','4호선':'4','5호선':'5',
       '6호선':'6','7호선':'7','8호선':'8','9호선':'9',
