@@ -6,53 +6,47 @@
 <title>지하철 퀴즈</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2f5;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden}
-.phone{width:100%;max-width:390px;min-height:100vh;background:#f0f2f5;display:flex;flex-direction:column;overflow:hidden}
-.hdr{padding:16px 20px 12px;background:#fff;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee}
-.hdr-title{font-size:17px;font-weight:700;color:#111;display:flex;align-items:center;gap:6px}
-.score-display{font-size:22px;font-weight:800;color:#111}
-.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:90px;display:flex;align-items:center;justify-content:center}
-.ad-banner iframe{max-width:100%!important;width:100%!important}
+body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#fff;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 .screen{flex:1;display:none;flex-direction:column;overflow-y:auto}
 .screen.active{display:flex}
+.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:90px;display:flex;align-items:center;justify-content:center}
 
-.home-hero{background:#fff;padding:24px 20px 18px;position:relative;overflow:hidden}
-.hero-svg{position:absolute;inset:0;width:100%;height:100%}
-.hero-text{position:relative;z-index:1}
-.hero-title{font-size:28px;font-weight:900;color:#111;letter-spacing:-1px}
-.home-cards{padding:14px 16px 98px 16px;display:flex;flex-direction:column;gap:10px}
+/* HOME */
+.home-cards{padding:14px 16px 98px;display:flex;flex-direction:column;gap:10px;background:#fff;position:relative;z-index:1}
 .mode-card{border-radius:20px;padding:22px 20px;cursor:pointer;transition:transform .1s;position:relative;overflow:hidden}
 .mode-card:active{transform:scale(.98)}
-.mc-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:14px}
-.mc-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:42px;opacity:1}
-.mc-row{display:flex;gap:6px}
-.mc-chip{background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.25)}
-.mc-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px;opacity:.75}
 .daily-card{border-radius:20px;padding:18px 20px;cursor:pointer;transition:transform .1s;position:relative;overflow:hidden}
 .daily-card:active{transform:scale(.98)}
+.mc-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:14px}
+.mc-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:42px}
+.mc-row{display:flex;gap:6px;flex-wrap:wrap}
+.mc-chip{background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.25)}
+.mc-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px;color:rgba(255,255,255,.7)}
+.shine{position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 100%);border-radius:20px 20px 0 0;pointer-events:none}
 
+/* QUIZ */
 .quiz-hdr{padding:14px 16px 10px;background:#fff;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between}
 .quiz-mode{font-size:13px;font-weight:700;color:#111}
 .quiz-meta{display:flex;align-items:center;gap:12px}
-.lives{display:flex;gap:3px}
 .q-score{font-size:18px;font-weight:800;color:#111}
 .prog-wrap{padding:10px 16px 8px;background:#fff;border-bottom:1px solid #f0f0f0}
 .prog-bar{height:4px;background:#f0f0f0;border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;border-radius:2px;transition:width .4s}
 .prog-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:#bbb}
-.quiz-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;padding-bottom:98px;align-items:center}
+.quiz-body{padding:14px 16px 98px;flex:1;display:flex;flex-direction:column;align-items:center}
 .quiz-body>*{width:100%;max-width:360px}
 .line-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px 6px 6px;border-radius:99px;margin-bottom:12px;align-self:center}
 .line-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
 .line-name{font-size:16px;font-weight:700}
 .question-card{border-radius:18px;padding:18px;margin-bottom:14px;background:#fff}
-.mm-track{display:flex;align-items:flex-end;justify-content:center;gap:0;padding:4px 0 2px}
+.mm-track{display:flex;align-items:flex-end;justify-content:center;padding:4px 0 2px}
 .mm-stop{display:flex;flex-direction:column;align-items:center;gap:5px}
 .mm-label{font-size:15px;font-weight:600;color:#bbb;text-align:center;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mm-label.cur{font-size:32px;font-weight:900;color:#111}
-.mm-dot{width:10px;height:10px;border-radius:50%;background:#ddd;border:2px solid #ddd}
+.mm-dot{width:10px;height:10px;border-radius:50%}
 .mm-dot.cur{width:14px;height:14px}
-.mm-seg{height:3px;width:40px;border-radius:2px;background:#eee;margin-bottom:7px}
+.mm-seg{height:3px;width:40px;border-radius:2px;margin-bottom:7px}
 .options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
 .opt-btn{padding:16px 10px;border-radius:14px;border:1.5px solid #eee;background:#fff;font-size:16px;font-weight:700;color:#222;text-align:center;cursor:pointer;transition:all .12s;min-height:68px;display:flex;align-items:center;justify-content:center;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .opt-btn:active{transform:scale(.96)}
@@ -65,11 +59,11 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .hint-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;gap:8px}
 .hint-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:99px;border:1.5px solid #FFB300;background:#FFF8E1;color:#F57F17;font-size:12px;font-weight:700;cursor:pointer}
 .hint-btn.disabled{opacity:.35;cursor:default;pointer-events:none}
-.hint-ad-btn{padding:7px 14px;border-radius:99px;border:1.5px solid #ddd;background:#f5f5f5;color:#888;font-size:12px;cursor:pointer}
 .feedback{text-align:center;padding:10px 0;font-size:14px;font-weight:700;min-height:24px}
 .feedback.correct{color:#4CAF50}
 .feedback.wrong{color:#EF5350}
 
+/* RESULT */
 .result-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
 .result-emoji{font-size:64px;margin-bottom:16px}
 .result-title{font-size:24px;font-weight:800;color:#111;margin-bottom:8px}
@@ -82,7 +76,6 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .btn-primary{padding:15px;border-radius:16px;background:#111;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer}
 .btn-secondary{padding:15px;border-radius:16px;background:#fff;color:#555;font-size:15px;font-weight:600;border:1.5px solid #e8e8e8;cursor:pointer}
 
-.combo-badge{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#FF6F00;color:#fff;padding:8px 20px;border-radius:99px;font-size:15px;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
 .toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;white-space:nowrap}
 .toast.show{opacity:1}
 .loading-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
@@ -93,7 +86,6 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 </head>
 <body>
 <div class="phone">
-  <div class="combo-badge" id="comboBadge"></div>
   <div class="toast" id="toast"></div>
 
   <div class="screen active" id="screenHome">
@@ -114,7 +106,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
         </div>
       </div>
       <div class="quiz-meta">
-        <div class="lives" id="livesDisplay"></div>
+        <div id="livesDisplay"></div>
         <div class="q-score" id="quizScore">0</div>
       </div>
     </div>
@@ -133,21 +125,17 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 </div>
 
 <script>
-const COUPANG_CODE="AF5441763";
 const adRendered={};
-function renderAd(containerId){
-  if(adRendered[containerId])return;
-  const container=document.getElementById(containerId);
-  if(!container)return;
-  container.innerHTML='';
-  container.style.overflow='hidden';
-  const iframe=document.createElement('iframe');
-  iframe.className='ad-frame';
-  iframe.src='ad.html';
-  iframe.style.cssText='width:100%;height:90px;border:none;display:block';
-  iframe.scrolling='no';
-  container.appendChild(iframe);
-  adRendered[containerId]=true;
+function renderAd(id){
+  if(adRendered[id])return;
+  const c=document.getElementById(id);
+  if(!c)return;
+  const f=document.createElement('iframe');
+  f.src='ad.html';
+  f.style.cssText='width:100%;height:90px;border:none;display:block';
+  f.scrolling='no';
+  c.appendChild(f);
+  adRendered[id]=true;
 }
 
 const LINES={
@@ -199,76 +187,83 @@ function save(){
 function checkHintReset(){if(S.hintDate!==today()){S.hintCount=3;S.hintDate=today();save();}}
 
 async function loadStations(){
-  try{const res=await fetch('stations.json');const data=await res.json();STATIONS=data.filter(s=>s[2]!=='-'&&s[3]!=='-');}
+  try{const r=await fetch('stations.json');const d=await r.json();STATIONS=d.filter(s=>s[2]!=='-'&&s[3]!=='-');}
   catch(e){STATIONS=[...FALLBACK];}
 }
 
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
 function pick(a,n){return shuffle(a).slice(0,n);}
-function seededRand(seed){let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280;};}
-function seededShuffle(arr,rng){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function getChosung(str){
   const CHO=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
   return[...str].map(c=>{const code=c.charCodeAt(0)-0xAC00;if(code<0||code>11171)return c;return CHO[Math.floor(code/28/21)];}).join('');
 }
 
-function generateQuestions(mode,count){
+function generateQuestions(mode,count=20){
   const pool=STATIONS.filter(s=>mode.lines.includes(s[0])&&s[2]!=='-'&&s[3]!=='-');
-  const n=count||20;
-  const selected=pick(pool,n);
-  return selected.map(s=>{
+  return pick(pool,count).map(s=>{
     if(Math.random()<mode.chosungRatio)
       return{type:'B',line:s[0],station:s[1],chosung:getChosung(s[1]),prev:s[2],next:s[3]};
     const answer=s[1];
     const wrongs=pick(pool.filter(x=>x[1]!==answer&&x[0]===s[0]),3).map(x=>x[1]);
-    if(wrongs.length<3){
-      const extra=pick(pool.filter(x=>x[1]!==answer&&!wrongs.includes(x[1])),3-wrongs.length).map(x=>x[1]);
-      wrongs.push(...extra);
-    }
+    if(wrongs.length<3)wrongs.push(...pick(pool.filter(x=>x[1]!==answer&&!wrongs.includes(x[1])),3-wrongs.length).map(x=>x[1]));
     return{type:'A',line:s[0],station:s[1],answer,options:shuffle([answer,...wrongs]),prev:s[2],next:s[3]};
   });
 }
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 
-function miniMap(prev,next,color){
-  return`<div class="mm-track">
-    <div class="mm-stop">
-      <div class="mm-label">${prev||'첫번째역'}</div>
-      <div class="mm-dot" style="background:${color};border-color:${color};opacity:.5"></div>
-    </div>
-    <div class="mm-seg" style="background:${color};opacity:.6"></div>
-    <div class="mm-stop">
-      <div class="mm-label cur" style="color:${color}">?</div>
-      <div class="mm-dot cur" style="background:${color};border-color:${color};box-shadow:0 0 0 5px ${color}44"></div>
-    </div>
-    <div class="mm-seg" style="background:${color};opacity:.6"></div>
-    <div class="mm-stop">
-      <div class="mm-label">${next||'마지막역'}</div>
-      <div class="mm-dot" style="background:${color};border-color:${color};opacity:.5"></div>
-    </div>
-  </div>`;
-}
+const HERO_SVG=`<svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 390 160" xmlns="http://www.w3.org/2000/svg">
+  <path d="M-100 40 Q50 20 150 40 Q250 60 390 30" stroke="#3949AB" stroke-width="2.5" fill="none" opacity=".15">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="200 0" dur="4s" repeatCount="indefinite"/>
+  </path>
+  <path d="M-300 40 Q-150 20 -50 40 Q50 60 190 30" stroke="#3949AB" stroke-width="2.5" fill="none" opacity=".15">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="200 0" dur="4s" repeatCount="indefinite"/>
+  </path>
+  <path d="M-100 90 Q80 70 180 90 Q280 110 420 80" stroke="#1565C0" stroke-width="2" fill="none" opacity=".1">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="200 0" dur="6s" repeatCount="indefinite"/>
+  </path>
+  <path d="M-300 90 Q-120 70 -20 90 Q80 110 220 80" stroke="#1565C0" stroke-width="2" fill="none" opacity=".1">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="200 0" dur="6s" repeatCount="indefinite"/>
+  </path>
+  <path d="M-100 135 Q60 115 160 135 Q260 155 400 125" stroke="#42A5F5" stroke-width="1.5" fill="none" opacity=".08">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="200 0" dur="8s" repeatCount="indefinite"/>
+  </path>
+  <path d="M-300 135 Q-140 115 -40 135 Q60 155 200 125" stroke="#42A5F5" stroke-width="1.5" fill="none" opacity=".08">
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="200 0" dur="8s" repeatCount="indefinite"/>
+  </path>
+  <circle r="4" fill="#3949AB" opacity=".25">
+    <animateMotion dur="4s" repeatCount="indefinite" path="M-100 40 Q50 20 150 40 Q250 60 390 30"/>
+  </circle>
+  <circle r="4" fill="#1565C0" opacity=".2">
+    <animateMotion dur="6s" repeatCount="indefinite" path="M-100 90 Q80 70 180 90 Q280 110 420 80"/>
+  </circle>
+  <circle r="3" fill="#42A5F5" opacity=".15">
+    <animateMotion dur="8s" repeatCount="indefinite" path="M-100 135 Q60 115 160 135 Q260 155 400 125"/>
+  </circle>
+</svg>`;
 
 function renderHome(){
   const el=document.getElementById('screenHome');
   el.innerHTML=`
-    <div class="hdr">
-      <div class="hdr-title"><img src="subway_icon.png" width="28" height="28" style="border-radius:6px;vertical-align:middle">지하철 종결자</div>
-      <div class="score-display">${S.totalScore.toLocaleString()}점</div>
-    </div>
-    <div class="home-hero">
-      <svg class="hero-svg" viewBox="0 0 390 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M0 70 Q70 50 150 65 Q230 80 310 55 L390 45" stroke="#0052A4" stroke-width="2" fill="none" opacity=".1"/>
-        <path d="M0 90 Q90 70 180 85 Q270 100 390 75" stroke="#00A84D" stroke-width="2" fill="none" opacity=".08"/>
-      </svg>
-      <div class="hero-text">
-        <div class="hero-title">🗺️ 노선도 종결자</div>
+    <div style="position:relative;overflow:hidden;min-height:160px">
+      ${HERO_SVG}
+      <div style="position:relative;z-index:1;padding:16px 20px 0">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:6px">
+            <img src="subway_icon.png" width="28" height="28" style="border-radius:6px">
+            <span style="font-size:17px;font-weight:700;color:#111">지하철 종결자</span>
+          </div>
+          <div style="font-size:22px;font-weight:800;color:#111">${S.totalScore.toLocaleString()}점</div>
+        </div>
+      </div>
+      <div style="position:relative;z-index:1;padding:20px 20px 28px">
+        <div style="font-size:12px;font-weight:700;color:#aaa;letter-spacing:.1em;margin-bottom:6px">SUBWAY QUIZ</div>
+        <div style="font-size:30px;font-weight:900;color:#111;letter-spacing:-1px">🗺️ 노선도 종결자</div>
       </div>
     </div>
     <div class="home-cards">
-      <div class="mode-card" style="background:linear-gradient(135deg,#283593 0%,#3949AB 40%,#7986CB 100%);box-shadow:0 6px 24px rgba(57,73,171,.5)" onclick="startMode('next')">
-        <div style="position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 100%);border-radius:20px 20px 0 0;pointer-events:none"></div>
+      <div class="mode-card" style="background:linear-gradient(135deg,#283593,#3949AB,#7986CB);box-shadow:0 6px 24px rgba(57,73,171,.4)" onclick="startMode('next')">
+        <div class="shine"></div>
         <div class="mc-title">다음역 맞추기</div>
         <div class="mc-icon">🚇</div>
         <div class="mc-row">
@@ -276,8 +271,8 @@ function renderHome(){
           <div class="mc-chip">❤️ 3개</div>
         </div>
       </div>
-      <div class="mode-card" style="background:linear-gradient(135deg,#BF360C 0%,#E65100 40%,#FF8A65 100%);box-shadow:0 6px 24px rgba(230,81,0,.5)" onclick="startMode('chosung')">
-        <div style="position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 100%);border-radius:20px 20px 0 0;pointer-events:none"></div>
+      <div class="mode-card" style="background:linear-gradient(135deg,#BF360C,#E65100,#FF8A65);box-shadow:0 6px 24px rgba(230,81,0,.4)" onclick="startMode('chosung')">
+        <div class="shine"></div>
         <div class="mc-title">초성 퀴즈</div>
         <div class="mc-icon">🔤</div>
         <div class="mc-row">
@@ -285,11 +280,11 @@ function renderHome(){
           <div class="mc-chip">❤️ 3개</div>
         </div>
       </div>
-      <div class="daily-card" style="background:linear-gradient(135deg,#004D40 0%,#00897B 40%,#4DB6AC 100%);box-shadow:0 6px 24px rgba(0,137,123,.5)" onclick="startMode('daily')">
-        <div style="position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 100%);border-radius:20px 20px 0 0;pointer-events:none"></div>
-        <div class="mc-label" style="color:rgba(255,255,255,.7)">TODAY'S CHALLENGE</div>
-        <div class="mc-title" style="font-size:20px;font-weight:800;color:#fff;margin-bottom:3px">데일리 챌린지</div>
-        <div class="mc-sub" style="font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px">오늘의 최고점 도전</div>
+      <div class="daily-card" style="background:linear-gradient(135deg,#004D40,#00897B,#4DB6AC);box-shadow:0 6px 24px rgba(0,137,123,.4)" onclick="startMode('daily')">
+        <div class="shine"></div>
+        <div class="mc-label">TODAY'S CHALLENGE</div>
+        <div class="mc-title" style="font-size:20px">데일리 챌린지</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px">오늘의 최고점 도전</div>
         <div class="mc-icon">📅</div>
         <div class="mc-row">
           <div class="mc-chip">${today()}</div>
@@ -301,6 +296,25 @@ function renderHome(){
     <div class="ad-banner" id="homeAdBanner" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;z-index:50"></div>`;
   showScreen('screenHome');
   renderAd('homeAdBanner');
+}
+
+function miniMap(prev,next,color){
+  return`<div class="mm-track">
+    <div class="mm-stop">
+      <div class="mm-label">${prev||'첫번째역'}</div>
+      <div class="mm-dot" style="background:${color};border:2px solid ${color};opacity:.5"></div>
+    </div>
+    <div class="mm-seg" style="background:${color};opacity:.6"></div>
+    <div class="mm-stop">
+      <div class="mm-label cur" style="color:${color}">?</div>
+      <div class="mm-dot cur" style="background:${color};border:2px solid ${color};box-shadow:0 0 0 5px ${color}44"></div>
+    </div>
+    <div class="mm-seg" style="background:${color};opacity:.6"></div>
+    <div class="mm-stop">
+      <div class="mm-label">${next||'마지막역'}</div>
+      <div class="mm-dot" style="background:${color};border:2px solid ${color};opacity:.5"></div>
+    </div>
+  </div>`;
 }
 
 function startMode(modeId){
@@ -316,6 +330,25 @@ function startMode(modeId){
   renderQuestion();
 }
 
+const CHO_LIST=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const SIMILAR={
+  'ㄱ':['가','각','간','갈','감','강','개','거','건','경','고','곡','공','관','광','교','구','국','군','궁','귀','기','길'],
+  'ㄴ':['나','낙','남','내','노','녹','논','누','능','니'],
+  'ㄷ':['다','단','달','대','덕','도','독','돌','동','두','득','등'],
+  'ㄹ':['락','란','랑','래','량','력','련','로','록','론','루','류','릉','리','린'],
+  'ㅁ':['마','만','말','망','매','면','명','모','목','무','문','미','민'],
+  'ㅂ':['바','박','반','발','방','배','백','번','범','변','별','병','보','복','봉','부','북','분'],
+  'ㅅ':['사','산','삼','상','새','서','석','선','성','세','소','속','송','수','숙','순','시','신'],
+  'ㅇ':['아','안','양','어','여','역','연','열','영','오','옥','온','왕','용','우','원','월','위','유','은','의','이','인','일'],
+  'ㅈ':['자','잠','장','재','전','정','제','조','종','주','중','지','진'],
+  'ㅊ':['창','천','철','청','초','촌','춘','충'],
+  'ㅋ':['코','콩'],
+  'ㅌ':['탄','태','터','토','통','투'],
+  'ㅍ':['파','판','평','포','풍','피'],
+  'ㅎ':['하','학','한','합','해','행','현','호','홍','화','환','황','회','후'],
+};
+function getInitial(c){const code=c.charCodeAt(0)-0xAC00;if(code<0||code>11171)return null;return CHO_LIST[Math.floor(code/28/21)];}
+
 function renderQuestion(){
   const q=S.questions[S.qIndex];
   const isDaily=S.currentMode.id==='daily';
@@ -329,66 +362,37 @@ function renderQuestion(){
   const line=LINES[q.line]||{name:q.line+'호선',color:'#888'};
   const lc=line.color;
   const hintDisabled=S.hintCount<=0||q.type==='B';
-  const hintBar=`
-    <div class="hint-bar">
-      <span id="comboBadgeInline" style="font-size:13px;font-weight:700;color:#FF6F00;opacity:0;transition:opacity .3s;margin-right:auto"></span>
-      <span style="font-size:12px;font-weight:700;color:#888">💡 ${S.hintCount}개</span>
-      <button class="hint-btn${hintDisabled?' disabled':''}" onclick="useHint()">💡 힌트</button>
-      ${S.hintCount===0?'<button class="hint-ad-btn" onclick="watchAd()">📺 충전</button>':''}
-    </div>`;
+  const hintBar=`<div class="hint-bar">
+    <span id="comboInline" style="font-size:13px;font-weight:700;color:#FF6F00;opacity:0;transition:opacity .3s;margin-right:auto"></span>
+    <span style="font-size:12px;font-weight:700;color:#888">💡 ${S.hintCount}개</span>
+    <button class="hint-btn${hintDisabled?' disabled':''}" onclick="useHint()">💡 힌트</button>
+    ${S.hintCount===0?'<button style="padding:7px 14px;border-radius:99px;border:1.5px solid #ddd;background:#f5f5f5;color:#888;font-size:12px;cursor:pointer" onclick="watchAd()">📺 충전</button>':''}
+  </div>`;
+
+  const linePill=`<div class="line-pill" style="background:${lc}33;border:1.5px solid ${lc}">
+    <div class="line-dot" style="background:${lc}">${q.line}</div>
+    <div class="line-name" style="color:${lc}">${line.name}</div>
+  </div>`;
+  const qCard=`<div class="question-card" style="border:2px solid ${lc}">${miniMap(q.prev,q.next,lc)}</div>`;
 
   const body=document.getElementById('quizBody');
   if(q.type==='A'){
-    body.innerHTML=`
-      <div class="line-pill" style="background:${lc}33;border:1.5px solid ${lc}">
-        <div class="line-dot" style="background:${lc}">${q.line}</div>
-        <div class="line-name" style="color:${lc}">${line.name}</div>
-      </div>
-      <div class="question-card" style="border:2px solid ${lc}">
-        ${miniMap(q.prev,q.next,lc)}
-      </div>
-      ${hintBar}
+    body.innerHTML=`${linePill}${qCard}${hintBar}
       <div class="options" id="options">
-        ${q.options.map(opt=>`<button class="opt-btn" onclick="answerA('${opt}',this)" data-val="${opt}">${opt}</button>`).join('')}
+        ${q.options.map(o=>`<button class="opt-btn" onclick="answerA('${o}',this)" data-val="${o}">${o}</button>`).join('')}
       </div>
       <div class="feedback" id="feedback"></div>`;
   }else{
     const chars=[...q.station];
-    const CHO_LIST=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
-    const getInitial=c=>{const code=c.charCodeAt(0)-0xAC00;if(code<0||code>11171)return null;return CHO_LIST[Math.floor(code/28/21)];};
-    const SIMILAR={
-      'ㄱ':['가','각','간','갈','감','강','개','거','건','경','고','곡','공','관','광','교','구','국','군','궁','귀','기','길'],
-      'ㄴ':['나','낙','남','내','노','녹','논','누','능','니'],
-      'ㄷ':['다','단','달','대','덕','도','독','돌','동','두','득','등'],
-      'ㄹ':['락','란','랑','래','량','력','련','로','록','론','루','류','릉','리','린'],
-      'ㅁ':['마','만','말','망','매','면','명','모','목','무','문','미','민'],
-      'ㅂ':['바','박','반','발','방','배','백','번','범','변','별','병','보','복','봉','부','북','분'],
-      'ㅅ':['사','산','삼','상','새','서','석','선','성','세','소','속','송','수','숙','순','시','신'],
-      'ㅇ':['아','안','양','어','여','역','연','열','영','오','옥','온','왕','용','우','원','월','위','유','은','의','이','인','일'],
-      'ㅈ':['자','잠','장','재','전','정','제','조','종','주','중','지','진'],
-      'ㅊ':['창','천','철','청','초','촌','춘','충'],
-      'ㅋ':['코','콩'],
-      'ㅌ':['탄','태','터','토','통','투'],
-      'ㅍ':['파','판','평','포','풍','피'],
-      'ㅎ':['하','학','한','합','해','행','현','호','홍','화','환','황','회','후'],
-    };
     const pool=new Set();
     chars.forEach(c=>{
       pool.add(c);
       const ini=getInitial(c);
-      const group=(ini&&SIMILAR[ini])||[];
-      shuffle(group).filter(g=>g!==c).slice(0,5).forEach(g=>pool.add(g));
+      shuffle((ini&&SIMILAR[ini])||[]).filter(g=>g!==c).slice(0,5).forEach(g=>pool.add(g));
     });
     const btnPool=shuffle([...pool]).slice(0,Math.max(chars.length+5,10));
     chars.forEach(c=>{if(!btnPool.includes(c))btnPool.push(c);});
-    body.innerHTML=`
-      <div class="line-pill" style="background:${lc}33;border:1.5px solid ${lc}">
-        <div class="line-dot" style="background:${lc}">${q.line}</div>
-        <div class="line-name" style="color:${lc}">${line.name}</div>
-      </div>
-      <div class="question-card" style="border:2px solid ${lc}">
-        ${miniMap(q.prev,q.next,lc)}
-      </div>
+    body.innerHTML=`${linePill}${qCard}
       <div class="chosung-box">
         <div class="chosung-text">${q.chosung}</div>
         <div class="chosung-hint">초성 힌트</div>
@@ -396,8 +400,8 @@ function renderQuestion(){
       <div id="answerSlots" style="display:flex;justify-content:center;gap:8px;margin:10px 0">
         ${chars.map(()=>`<div class="slot" style="width:44px;height:44px;border-radius:10px;border:2px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#111"></div>`).join('')}
       </div>
-      <div id="charBtns" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0">
-        ${shuffle(btnPool).map(c=>`<button class="char-btn" onclick="inputChar('${c}')" style="width:44px;height:44px;border-radius:10px;border:1.5px solid #ddd;background:#fff;font-size:18px;font-weight:700;cursor:pointer">${c}</button>`).join('')}
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0">
+        ${shuffle(btnPool).map(c=>`<button onclick="inputChar('${c}')" style="width:44px;height:44px;border-radius:10px;border:1.5px solid #ddd;background:#fff;font-size:18px;font-weight:700;cursor:pointer">${c}</button>`).join('')}
         <button onclick="deleteChar()" style="width:44px;height:44px;border-radius:10px;border:1.5px solid #ddd;background:#f5f5f5;font-size:18px;cursor:pointer">⌫</button>
       </div>
       <div class="feedback" id="feedback"></div>`;
@@ -409,51 +413,39 @@ function renderQuestion(){
 function useHint(){
   const q=S.questions[S.qIndex];
   if(S.hintCount<=0||S.answered||q.type==='B')return;
-  const btns=[...document.querySelectorAll('.opt-btn:not(.eliminated)')];
-  const wrongs=btns.filter(b=>b.dataset.val!==q.answer);
-  if(!wrongs.length)return;
+  const wrongs=[...document.querySelectorAll('.opt-btn:not(.eliminated)')].filter(b=>b.dataset.val!==q.answer);
   pick(wrongs,Math.min(2,wrongs.length)).forEach(b=>b.classList.add('eliminated'));
   S.hintCount--;save();
-  document.querySelector('.hint-btn').textContent=`💡 힌트 (${S.hintCount})`;
-  if(S.hintCount<=0)document.querySelector('.hint-btn').classList.add('disabled');
+  const btn=document.querySelector('.hint-btn');
+  if(btn)btn.textContent=`💡 힌트 (${S.hintCount})`;
+  if(S.hintCount<=0&&btn)btn.classList.add('disabled');
   showToast('오답 2개 제거!');
 }
-function watchAd(){showToast('📺 광고 완료! 힌트 +2개');S.hintCount=Math.min(S.hintCount+2,5);save();renderQuestion();}
+function watchAd(){showToast('힌트 +2개');S.hintCount=Math.min(S.hintCount+2,5);save();renderQuestion();}
 
 function inputChar(c){
   if(S.answered)return;
-  const chars=window._answerChars;
-  const inputted=window._inputted;
-  if(inputted.length>=chars.length)return;
-  inputted.push(c);
-  updateSlots();
-  if(inputted.length===chars.length)checkCharAnswer();
+  const chars=window._answerChars,inp=window._inputted;
+  if(inp.length>=chars.length)return;
+  inp.push(c);updateSlots();
+  if(inp.length===chars.length)checkCharAnswer();
 }
-function deleteChar(){
-  if(S.answered)return;
-  window._inputted.pop();
-  updateSlots();
-}
+function deleteChar(){if(S.answered)return;window._inputted.pop();updateSlots();}
 function updateSlots(){
-  const slots=document.querySelectorAll('.slot');
-  const inputted=window._inputted;
-  slots.forEach((s,i)=>{
-    s.textContent=inputted[i]||'';
-    s.style.borderColor=inputted[i]?'#333':'#ddd';
+  document.querySelectorAll('.slot').forEach((s,i)=>{
+    s.textContent=window._inputted[i]||'';
+    s.style.borderColor=window._inputted[i]?'#333':'#ddd';
   });
 }
 function checkCharAnswer(){
-  const answer=window._answerChars.join('');
-  const input=window._inputted.join('');
-  const correct=input===answer;
+  const correct=window._inputted.join('')===window._answerChars.join('');
   S.answered=true;
-  const slots=document.querySelectorAll('.slot');
-  slots.forEach(s=>s.style.borderColor=correct?'#4CAF50':'#EF5350');
-  slots.forEach(s=>s.style.background=correct?'#E8F5E9':'#FFEBEE');
-  slots.forEach(s=>s.style.color=correct?'#2E7D32':'#C62828');
-  if(!correct){
-    setTimeout(()=>{slots.forEach((s,i)=>{s.textContent=window._answerChars[i];s.style.borderColor='#EF5350';});},400);
-  }
+  document.querySelectorAll('.slot').forEach((s,i)=>{
+    s.style.borderColor=correct?'#4CAF50':'#EF5350';
+    s.style.background=correct?'#E8F5E9':'#FFEBEE';
+    s.style.color=correct?'#2E7D32':'#C62828';
+  });
+  if(!correct)setTimeout(()=>document.querySelectorAll('.slot').forEach((s,i)=>s.textContent=window._answerChars[i]),400);
   handleResult(correct);
 }
 
@@ -473,7 +465,7 @@ function handleResult(correct){
   const isDaily=S.currentMode.id==='daily';
   if(correct){
     S.correct++;S.combo++;
-    const bonus=Math.min(S.combo*10,50);const gained=100+bonus;
+    const gained=100+Math.min(S.combo*10,50);
     S.score+=gained;S.totalScore+=gained;
     if(S.score>S.bestScore)S.bestScore=S.score;
     if(isDaily&&S.score>S.dailyScore){S.dailyScore=S.score;S.dailyDate=today();}
@@ -487,13 +479,11 @@ function handleResult(correct){
     if(!isDaily)document.getElementById('livesDisplay').innerHTML=Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
   }
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
-  const isEnd=isDaily?false:S.lives<=0;
+  const isEnd=!isDaily&&S.lives<=0;
   setTimeout(()=>{
     if(isEnd){showResult();return;}
     S.qIndex++;
-    if(S.qIndex>=S.questions.length){
-      S.questions=[...S.questions,...generateQuestions(S.currentMode,20)];
-    }
+    if(S.qIndex>=S.questions.length)S.questions=[...S.questions,...generateQuestions(S.currentMode,20)];
     renderQuestion();
   },correct?900:1400);
 }
@@ -501,9 +491,8 @@ function handleResult(correct){
 function showResult(){
   const isNewBest=S.score>=S.bestScore&&S.score>0;
   S.totalPlayed++;save();
-  const emoji=S.lives<=0?'😢':S.correct>=S.qIndex?'🏆':'🎉';
   document.getElementById('resultWrap').innerHTML=`
-    <div class="result-emoji">${emoji}</div>
+    <div class="result-emoji">${S.lives<=0?'😢':'🎉'}</div>
     <div class="result-title">${S.lives<=0?'게임 오버':'대단해요!'}</div>
     <div class="result-sub">${S.correct}문제 정답 · ${S.qIndex}문제 도전</div>
     <div class="result-score">${S.score.toLocaleString()}</div>
@@ -517,14 +506,11 @@ function showResult(){
   renderAd('resultAdBanner');
 }
 
-function confirmQuit(){
-  if(confirm('진행 중인 게임을 포기할까요?')){renderHome();}
-}
+function confirmQuit(){if(confirm('진행 중인 게임을 포기할까요?'))renderHome();}
 function showCombo(n){
-  const el=document.getElementById('comboBadgeInline');
+  const el=document.getElementById('comboInline');
   if(!el)return;
-  el.textContent=`🔥 ${n}콤보!`;
-  el.style.opacity='1';
+  el.textContent=`🔥 ${n}콤보!`;el.style.opacity='1';
   setTimeout(()=>el.style.opacity='0',1200);
 }
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2000);}
