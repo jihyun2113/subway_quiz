@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>지하철 퀴즈</title>
-<script src="https://ads-partners.coupang.com/g.js" ></script>
+<script src="https://ads-partners.coupang.com/g.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2f5;display:flex;justify-content:center;min-height:100vh}
-.phone{width:100%;max-width:390px;min-height:100vh;background:#f0f2f5;display:flex;flex-direction:column}
+body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2f5;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f0f2f5;display:flex;flex-direction:column;overflow:hidden}
 .hdr{padding:16px 20px 12px;background:#fff;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee}
 .hdr-title{font-size:17px;font-weight:700;color:#111}
 .score-display{font-size:22px;font-weight:800;color:#111}
-.ad-banner{height:auto;min-height:50px;padding:4px 0;background:#fff;border-top:1px solid #eee;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
-  .ad-banner iframe{max-width:100%!important;width:100%!important;}
+.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:50px;display:flex;align-items:center;justify-content:center}
+.ad-banner iframe{max-width:100%!important;width:100%!important}
 .screen{flex:1;display:none;flex-direction:column;overflow-y:auto}
 .screen.active{display:flex}
 
@@ -124,7 +124,6 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
       <div class="spinner"></div>
       <p>역 데이터 불러오는 중...</p>
     </div>
-    <div class="ad-banner" id="homeAdBanner"></div>
   </div>
 
   <div class="screen" id="screenQuiz">
@@ -153,6 +152,40 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 </div>
 
 <script>
+// ✅ 여기에 쿠팡 파트너스 ID만 입력하세요
+const COUPANG_ID = 977582;
+const COUPANG_CODE = "AF5441763";
+
+function renderAd(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  const adWidth = Math.min(window.innerWidth, 390);
+  const wait = (retry = 0) => {
+    if (typeof PartnersCoupang !== 'undefined') {
+      new PartnersCoupang.G({
+        "id": COUPANG_ID,
+        "template": "carousel",
+        "trackingCode": COUPANG_CODE,
+        "width": String(adWidth),
+        "height": "50",
+        "tsource": ""
+      });
+      // iframe 너비 강제 조정
+      setTimeout(() => {
+        const iframe = container.querySelector('iframe');
+        if (iframe) {
+          iframe.style.maxWidth = '100%';
+          iframe.style.width = adWidth + 'px';
+        }
+      }, 800);
+    } else if (retry < 20) {
+      setTimeout(() => wait(retry + 1), 200);
+    }
+  };
+  wait();
+}
+
 const LINES={
   '1':{name:'1호선',color:'#0052A4'},'2':{name:'2호선',color:'#00A84D'},
   '3':{name:'3호선',color:'#EF7C1C'},'4':{name:'4호선',color:'#00A5DE'},
@@ -205,34 +238,6 @@ function checkHintReset(){if(S.hintDate!==today()){S.hintCount=3;S.hintDate=toda
 async function loadStations(){
   try{const res=await fetch('stations.json');const data=await res.json();STATIONS=data.filter(s=>s[2]!=='-'&&s[3]!=='-');}
   catch(e){STATIONS=[...FALLBACK];}
-}
-
-function initAds(){
-  ['homeAdBanner','quizAdBanner','resultAdBanner'].forEach(id=>{
-    try{new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});}catch(e){}
-  });
-}
-
-function renderAd(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = '';
-
-  const wait = (retry = 0) => {
-    if (typeof PartnersCoupang !== 'undefined') {
-      new PartnersCoupang.G({
-        "id": 977582,
-        "template": "carousel",
-        "trackingCode": "AF5441763",
-        "width": "390",
-        "height": "50",
-        "tsource": ""
-      });
-    } else if (retry < 20) {
-      setTimeout(() => wait(retry + 1), 200);
-    }
-  };
-  wait();
 }
 
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
