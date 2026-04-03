@@ -562,6 +562,7 @@ function showResult(){
 function confirmQuit(){
   if(confirm('진행 중인 게임을 포기할까요?')) renderHome();
 }
+function showCombo(n){
   const el=document.getElementById('comboBadgeInline');
   if(!el)return;
   el.textContent=`🔥 ${n}콤보!`;
