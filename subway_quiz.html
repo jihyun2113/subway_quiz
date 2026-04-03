@@ -552,7 +552,7 @@ function showResult(){
     <div class="result-score-label">이번 점수</div>
     <div class="result-best">${isNewBest?'🎉 <span>신기록!</span>':'최고 점수 <span>'+S.bestScore.toLocaleString()+'점</span>'}</div>
     <div class="result-btns">
-      ${isDaily?'':`<button class="btn-primary" onclick="startMode('${S.currentMode.id}')">다시 도전</button>`}
+      ${isDaily?'':`<button class="btn-primary" onclick="startMode('`+S.currentMode.id+`')">다시 도전</button>`}
       <button class="btn-secondary" onclick="renderHome()">홈으로</button>
     </div>`;
   showScreen('screenResult');
