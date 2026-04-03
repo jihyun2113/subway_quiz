@@ -31,7 +31,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .mode-card:active{transform:scale(.98)}
 .mc-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
 .mc-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5}
-.mc-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:42px;opacity:.25}
+.mc-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:42px;opacity:1}
 .mc-row{display:flex;gap:6px;margin-top:14px}
 .mc-chip{background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.25)}
 .mc-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px;opacity:.75}
@@ -186,8 +186,9 @@ const FALLBACK=[
   ['9','여의도','국회의사당','샛강'],
 ];
 const MODES={
-  infinite:{id:'infinite',name:'역 이름 맞추기',desc:'전 노선 · 목숨 3개',color:'#3949AB',chosungRatio:.3,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
-  daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 10문제',color:'#00897B',chosungRatio:.3,lines:['1','2','3','4','5','6','7','8','9'],qCount:10},
+  next:{id:'next',name:'다음역 맞추기',desc:'전 노선 · 목숨 3개 · 4지선다',color:'#3949AB',chosungRatio:0,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  chosung:{id:'chosung',name:'초성 퀴즈',desc:'전 노선 · 목숨 3개 · 글자 선택',color:'#E65100',chosungRatio:1,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 10문제 · 최고점 도전',color:'#00897B',chosungRatio:.5,lines:['1','2','3','4','5','6','7','8','9'],qCount:10},
 };
 const S={
   totalScore:parseInt(localStorage.getItem('tS')||'0'),
@@ -276,7 +277,7 @@ function renderHome(){
   const isDone=S.dailyDone&&S.dailyDate===today();
   el.innerHTML=`
     <div class="hdr">
-      <div class="hdr-title">🚇 지하철 종결자</div>
+      <div class="hdr-title"><img src="subway_icon.png" width="28" height="28" style="border-radius:6px;vertical-align:middle;margin-right:6px">지하철 종결자</div>
       <div class="score-display">${S.totalScore.toLocaleString()}점</div>
     </div>
     <div class="home-hero">
@@ -284,42 +285,42 @@ function renderHome(){
         <path d="M0 70 Q70 50 150 65 Q230 80 310 55 L390 45" stroke="#0052A4" stroke-width="2" fill="none" opacity=".1"/>
         <path d="M0 90 Q90 70 180 85 Q270 100 390 75" stroke="#00A84D" stroke-width="2" fill="none" opacity=".08"/>
         <path d="M0 105 Q110 90 220 102 Q320 114 390 95" stroke="#EF7C1C" stroke-width="1.5" fill="none" opacity=".07"/>
-        <circle cx="150" cy="65" r="4" fill="#0052A4" opacity=".18"/>
-        <circle cx="310" cy="55" r="4" fill="#0052A4" opacity=".18"/>
-        <circle cx="180" cy="85" r="3" fill="#00A84D" opacity=".15"/>
-        <circle cx="60" cy="74" r="3" fill="#0052A4" opacity=".12"/>
-        <circle cx="330" cy="78" r="3" fill="#00A84D" opacity=".12"/>
       </svg>
       <div class="hero-text">
-        <div class="hero-title" style="font-size:32px;margin-bottom:8px">🗺️</div>
-        <div class="hero-title" style="font-size:28px">노선도 종결자</div>
+        <div class="hero-title" style="font-size:28px">🗺️ 노선도 종결자</div>
       </div>
     </div>
-    <div class="home-stats">
-      <div class="stat-chip"><div class="stat-v">${S.bestScore.toLocaleString()}</div><div class="stat-l">최고 점수</div></div>
-      <div class="stat-chip"><div class="stat-v">${S.totalPlayed}</div><div class="stat-l">총 플레이</div></div>
-      <div class="stat-chip"><div class="stat-v">💡 ${S.hintCount}</div><div class="stat-l">오늘 힌트</div></div>
-    </div>
+
     <div class="home-cards">
-      <div class="mode-card" style="background:linear-gradient(135deg,#1a237e,#3949AB)" onclick="startMode('infinite')">
-        <div class="mc-title">역 이름 맞추기</div>
-        <div class="mc-sub">목숨 3개 · 전 노선 · 끝없이 도전</div>
+      <div class="mode-card" style="background:linear-gradient(135deg,#3949AB,#5C6BC0)" onclick="startMode('next')">
+        <div class="mc-title">다음역 맞추기</div>
+        <div class="mc-sub">앞뒤 역을 보고 빈칸의 역을 맞춰요</div>
         <div class="mc-icon">🚇</div>
         <div class="mc-row">
-          <div class="mc-chip">최고 ${S.bestScore.toLocaleString()}점</div>
+          <div class="mc-chip">4지선다</div>
           <div class="mc-chip">전 노선</div>
+          <div class="mc-chip">❤️ 3개</div>
         </div>
       </div>
-      <div class="daily-card${isDone?' done':''}" style="background:linear-gradient(135deg,#004D40,#00897B)" onclick="${isDone?'':'startMode(&quot;daily&quot;)'}">
+      <div class="mode-card" style="background:linear-gradient(135deg,#E65100,#FF7043)" onclick="startMode('chosung')">
+        <div class="mc-title">초성 퀴즈</div>
+        <div class="mc-sub">초성을 보고 역 이름 글자를 골라요</div>
+        <div class="mc-icon">🔤</div>
+        <div class="mc-row">
+          <div class="mc-chip">글자 선택</div>
+          <div class="mc-chip">전 노선</div>
+          <div class="mc-chip">❤️ 3개</div>
+        </div>
+      </div>
+      <div class="daily-card" style="background:linear-gradient(135deg,#00897B,#26A69A)" onclick="startMode('daily')">
         <div class="mc-label" style="color:rgba(255,255,255,.7)">TODAY'S CHALLENGE</div>
         <div class="mc-title" style="font-size:20px;font-weight:800;color:#fff;margin-bottom:3px">데일리 챌린지</div>
-        <div class="mc-sub" style="font-size:12px;color:rgba(255,255,255,.65)">${isDone?'오늘은 이미 완료했어요':'매일 새로운 10문제 · 하루 1회'}</div>
+        <div class="mc-sub" style="font-size:12px;color:rgba(255,255,255,.65)">오늘의 10문제 · 최고점 도전 · 무제한 재도전</div>
         <div class="mc-icon">📅</div>
         <div class="mc-row">
           <div class="mc-chip">${today()}</div>
-          ${isDone?'<div class="mc-chip">✓ '+S.dailyScore.toLocaleString()+'점</div>':'<div class="mc-chip">10문제</div>'}
+          ${S.dailyDate===today()&&S.dailyScore>0?'<div class="mc-chip">최고 '+S.dailyScore.toLocaleString()+'점</div>':'<div class="mc-chip">혼합 문제</div>'}
         </div>
-        ${isDone?'<div class="dc-done-badge">완료</div>':''}
       </div>
     </div>
     <div class="ad-banner" id="homeAdBanner" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;z-index:50"></div>`;
@@ -331,7 +332,7 @@ function startMode(modeId){
   const mode=MODES[modeId];
   S.currentMode=mode;
   const isDaily=modeId==='daily';
-  S.questions=isDaily?generateQuestions(mode,today(),mode.qCount):generateQuestions(mode,null,50);
+  S.questions=generateQuestions(mode,null,50);
   S.qIndex=0;S.correct=0;S.score=0;S.combo=0;S.lives=3;S.answered=false;
   document.getElementById('quizModeName').textContent=mode.name;
   document.getElementById('quizModeDesc').textContent=mode.desc;
@@ -354,7 +355,7 @@ function renderQuestion(){
   }
   document.getElementById('progCorrect').textContent=`정답 ${S.correct}`;
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
-  document.getElementById('livesDisplay').innerHTML=Array.from({length:3},(_,i)=>`<span class="heart">${i<S.lives?'❤️':'🖤'}</span>`).join('');
+  document.getElementById('livesDisplay').innerHTML=isDaily?'':Array.from({length:3},(_,i)=>`<span class="heart">${i<S.lives?'❤️':'🖤'}</span>`).join('');
 
   const line=LINES[q.line]||{name:q.line+'호선',color:'#888'};
   const lc=line.color;
@@ -383,8 +384,37 @@ function renderQuestion(){
       </div>
       <div class="feedback" id="feedback"></div>`;
   }else{
+    const chars=[...q.station];
+    const CHO_LIST=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+    const getInitial=c=>{const code=c.charCodeAt(0)-0xAC00;if(code<0||code>11171)return null;return CHO_LIST[Math.floor(code/28/21)];};
+    const SIMILAR={
+      'ㄱ':['가','강','개','거','건','경','고','곡','공','관','광','교','구','국','군','궁','귀','기','길'],
+      'ㄴ':['나','낙','남','내','노','녹','논','누','능','니'],
+      'ㄷ':['다','단','달','대','덕','도','독','돌','동','두','득','등'],
+      'ㄹ':['락','란','랑','래','량','력','련','로','록','론','루','류','릉','리','린'],
+      'ㅁ':['마','만','말','망','매','면','명','모','목','무','문','미','민'],
+      'ㅂ':['바','박','반','발','방','배','백','번','범','변','별','병','보','복','봉','부','북','분'],
+      'ㅅ':['사','산','삼','상','새','서','석','선','성','세','소','속','송','수','숙','순','시','신'],
+      'ㅇ':['아','안','양','어','역','연','열','영','오','옥','온','왕','용','우','원','월','위','유','은','의','이','인','일'],
+      'ㅈ':['자','잠','장','재','전','정','제','조','종','주','중','지','진'],
+      'ㅊ':['창','천','철','청','초','촌','춘','충'],
+      'ㅋ':['코','콩'],
+      'ㅌ':['탄','태','터','토','통','투'],
+      'ㅍ':['파','판','평','포','풍','피'],
+      'ㅎ':['하','학','한','합','해','행','현','호','홍','화','환','황','회','후'],
+    };
+    // 각 자리마다 정답 글자 + 같은 초성 오답 글자 섞기
+    const pool=new Set();
+    chars.forEach(c=>{
+      pool.add(c); // 정답 글자 반드시 추가
+      const ini=getInitial(c);
+      const group=(ini&&SIMILAR[ini])||[];
+      shuffle(group).filter(g=>g!==c).slice(0,5).forEach(g=>pool.add(g));
+    });
+    const btnPool=shuffle([...pool]).slice(0,Math.max(chars.length+5,10));
+    // 최종 확인: 정답 글자 누락 없도록
+    chars.forEach(c=>{if(!btnPool.includes(c))btnPool.push(c);});
     body.innerHTML=`
-      <div class="quiz-type-badge badge-b">🟡 초성 퀴즈</div>
       <div class="line-pill" style="background:${lc}33;border:1.5px solid ${lc}">
         <div class="line-dot" style="background:${lc}">${q.line}</div>
         <div class="line-name" style="color:${lc}">${line.name}</div>
@@ -396,12 +426,16 @@ function renderQuestion(){
         <div class="chosung-text">${q.chosung}</div>
         <div class="chosung-hint">초성 힌트</div>
       </div>
-      <div class="chosung-input-wrap">
-        <input class="chosung-input" id="chosungInput" placeholder="역이름 입력..." maxlength="12"
-          onkeydown="if(event.key==='Enter')submitChosung()"/>
-        <button class="submit-btn" id="submitBtn" onclick="submitChosung()">확인</button>
+      <div id="answerSlots" style="display:flex;justify-content:center;gap:8px;margin:10px 0">
+        ${chars.map(()=>`<div class="slot" style="width:44px;height:44px;border-radius:10px;border:2px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#111"></div>`).join('')}
+      </div>
+      <div id="charBtns" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0">
+        ${shuffle(btnPool).map(c=>`<button class="char-btn" onclick="inputChar('${c}')" style="width:44px;height:44px;border-radius:10px;border:1.5px solid #ddd;background:#fff;font-size:18px;font-weight:700;cursor:pointer">${c}</button>`).join('')}
+        <button onclick="deleteChar()" style="width:44px;height:44px;border-radius:10px;border:1.5px solid #ddd;background:#f5f5f5;font-size:18px;cursor:pointer">⌫</button>
       </div>
       <div class="feedback" id="feedback"></div>`;
+    window._answerChars=chars;
+    window._inputted=[];
     setTimeout(()=>document.getElementById('chosungInput')?.focus(),100);
   }
 }
@@ -430,17 +464,45 @@ function answerA(val,btn){
   });
   handleResult(val===q.answer);
 }
-function submitChosung(){
+function inputChar(c){
   if(S.answered)return;
-  const input=document.getElementById('chosungInput');
-  const val=input.value.trim();if(!val)return;
-  S.answered=true;const q=S.questions[S.qIndex];
-  const correct=val===q.station;
-  input.classList.add(correct?'correct':'wrong');
-  input.disabled=true;document.getElementById('submitBtn').disabled=true;
-  if(!correct)input.value=`${val} → 정답: ${q.station}`;
+  const chars=window._answerChars;
+  const inputted=window._inputted;
+  if(inputted.length>=chars.length)return;
+  inputted.push(c);
+  updateSlots();
+  if(inputted.length===chars.length)checkCharAnswer();
+}
+function deleteChar(){
+  if(S.answered)return;
+  window._inputted.pop();
+  updateSlots();
+}
+function updateSlots(){
+  const slots=document.querySelectorAll('.slot');
+  const inputted=window._inputted;
+  slots.forEach((s,i)=>{
+    s.textContent=inputted[i]||'';
+    s.style.borderColor=inputted[i]?'#333':'#ddd';
+  });
+}
+function checkCharAnswer(){
+  const answer=window._answerChars.join('');
+  const input=window._inputted.join('');
+  const correct=input===answer;
+  S.answered=true;
+  const slots=document.querySelectorAll('.slot');
+  slots.forEach(s=>s.style.borderColor=correct?'#4CAF50':'#EF5350');
+  slots.forEach(s=>s.style.background=correct?'#E8F5E9':'#FFEBEE');
+  slots.forEach(s=>s.style.color=correct?'#2E7D32':'#C62828');
+  if(!correct){
+    setTimeout(()=>{
+      slots.forEach((s,i)=>{s.textContent=window._answerChars[i];s.style.borderColor='#EF5350';});
+    },400);
+  }
   handleResult(correct);
 }
+function submitChosung(){}
 
 function handleResult(correct){
   const fb=document.getElementById('feedback');
@@ -460,7 +522,7 @@ function handleResult(correct){
   }
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
   const isDaily=S.currentMode.id==='daily';
-  const isEnd=S.lives<=0||(isDaily&&S.qIndex+1>=S.questions.length);
+  const isEnd=isDaily?(S.qIndex+1>=S.questions.length):S.lives<=0;
   setTimeout(()=>{
     if(isEnd){showResult();return;}
     S.qIndex++;
@@ -487,7 +549,7 @@ function showResult(){
     <div class="result-score-label">이번 점수</div>
     <div class="result-best">${isNewBest?'🎉 <span>신기록!</span>':'최고 점수 <span>'+S.bestScore.toLocaleString()+'점</span>'}</div>
     <div class="result-btns">
-      ${isDaily?'':`<button class="btn-primary" onclick="startMode('infinite')">다시 도전</button>`}
+      ${isDaily?'':`<button class="btn-primary" onclick="startMode('${S.currentMode.id}')">다시 도전</button>`}
       <button class="btn-secondary" onclick="renderHome()">홈으로</button>
     </div>`;
   showScreen('screenResult');
