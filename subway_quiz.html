@@ -4,90 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>지하철 퀴즈</title>
+<script src="https://ads-partners.coupang.com/g.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2f5;display:flex;justify-content:center;min-height:100vh}
 .phone{width:100%;max-width:390px;min-height:100vh;background:#f0f2f5;display:flex;flex-direction:column}
-
 .hdr{padding:16px 20px 12px;background:#fff;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee}
 .hdr-title{font-size:17px;font-weight:700;color:#111}
-.hdr-sub{font-size:11px;color:#bbb;margin-top:1px}
 .score-display{font-size:22px;font-weight:800;color:#111}
-
-.ad-banner{height:50px;background:#fff;border-top:1px solid #eee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ad-banner span{font-size:11px;color:#ccc;letter-spacing:.1em}
-
+.ad-banner{height:auto;min-height:50px;padding:4px 0;background:#fff;border-top:1px solid #eee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .screen{flex:1;display:none;flex-direction:column;overflow-y:auto}
 .screen.active{display:flex}
 
-/* ── HOME ── */
+/* HOME */
 .home-hero{background:#fff;padding:28px 20px 22px;position:relative;overflow:hidden}
 .hero-svg{position:absolute;inset:0;width:100%;height:100%}
 .hero-text{position:relative;z-index:1}
-.hero-label{font-size:12px;font-weight:600;color:#888;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .hero-title{font-size:28px;font-weight:900;color:#111;letter-spacing:-1.5px;line-height:1.15;margin-bottom:6px}
-.hero-title span{display:block}
-.hero-sub{font-size:13px;color:#999}
-
 .home-stats{display:flex;gap:8px;padding:12px 16px;background:#fff;border-top:1px solid #f0f0f0}
 .stat-chip{flex:1;background:#f7f8fa;border-radius:12px;padding:10px 8px;text-align:center}
 .stat-v{font-size:18px;font-weight:800;color:#111}
 .stat-l{font-size:10px;color:#bbb;margin-top:2px}
-
 .home-cards{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-
-/* 무한모드 카드 */
 .mode-card{border-radius:20px;padding:22px 20px;cursor:pointer;transition:transform .1s;position:relative;overflow:hidden}
 .mode-card:active{transform:scale(.98)}
-.mc-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px;opacity:.75}
 .mc-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
 .mc-sub{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5}
 .mc-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:42px;opacity:.25}
 .mc-row{display:flex;gap:6px;margin-top:14px}
 .mc-chip{background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.25)}
-
-/* 데일리 카드 */
+.mc-label{font-size:10px;font-weight:700;letter-spacing:.1em;margin-bottom:6px;opacity:.75}
 .daily-card{border-radius:20px;padding:18px 20px;cursor:pointer;transition:transform .1s;position:relative;overflow:hidden}
 .daily-card:active{transform:scale(.98)}
 .daily-card.done{opacity:.65;cursor:default}
 .daily-card.done:active{transform:none}
 .dc-done-badge{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px}
 
-/* 기록 */
-.record-card{background:#fff;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px}
-.rc-icon{width:44px;height:44px;border-radius:12px;background:#f0f2f5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.rc-info{flex:1}
-.rc-title{font-size:14px;font-weight:700;color:#111;margin-bottom:2px}
-.rc-sub{font-size:12px;color:#aaa}
-.rc-val{font-size:18px;font-weight:800;color:#111}
-
-/* ── QUIZ ── */
+/* QUIZ */
 .quiz-hdr{padding:14px 16px 10px;background:#fff;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between}
 .quiz-mode{font-size:13px;font-weight:700;color:#111}
 .quiz-meta{display:flex;align-items:center;gap:12px}
 .lives{display:flex;gap:3px}
 .q-score{font-size:18px;font-weight:800;color:#111}
-
 .prog-wrap{padding:10px 16px 8px;background:#fff;border-bottom:1px solid #f0f0f0}
 .prog-bar{height:4px;background:#f0f0f0;border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;border-radius:2px;transition:width .4s}
 .prog-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:#bbb}
-
 .quiz-body{padding:14px 16px;flex:1;display:flex;flex-direction:column}
-
 .quiz-type-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:99px;margin-bottom:12px}
 .badge-a{background:#E3F2FD;color:#1565C0}
 .badge-b{background:#FFF8E1;color:#F57F17}
-
 .line-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px 6px 6px;border-radius:99px;margin-bottom:12px}
 .line-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
 .line-name{font-size:13px;font-weight:700}
-
-/* 문제 카드 */
 .question-card{border-radius:18px;padding:18px;margin-bottom:14px;background:#fff;border:1.5px solid #eee}
-.q-label{font-size:11px;font-weight:600;letter-spacing:.05em;margin-bottom:14px}
-
-/* 미니맵 */
 .mm-track{display:flex;align-items:flex-end;justify-content:center;gap:0;padding:4px 0 2px}
 .mm-stop{display:flex;flex-direction:column;align-items:center;gap:5px}
 .mm-label{font-size:13px;font-weight:600;color:#bbb;text-align:center;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -95,16 +65,12 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .mm-dot{width:10px;height:10px;border-radius:50%;background:#ddd;border:2px solid #ddd}
 .mm-dot.cur{width:14px;height:14px}
 .mm-seg{height:3px;width:40px;border-radius:2px;background:#eee;margin-bottom:7px}
-
-/* 선택지 */
 .options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
 .opt-btn{padding:16px 10px;border-radius:14px;border:1.5px solid #eee;background:#fff;font-size:14px;font-weight:700;color:#222;text-align:center;cursor:pointer;transition:all .12s;min-height:68px;display:flex;align-items:center;justify-content:center;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .opt-btn:active{transform:scale(.96)}
 .opt-btn.eliminated{opacity:.2;pointer-events:none;text-decoration:line-through}
 .opt-btn.correct{background:#E8F5E9;border-color:#4CAF50;color:#2E7D32}
 .opt-btn.wrong{background:#FFEBEE;border-color:#EF5350;color:#C62828}
-
-/* 초성 */
 .chosung-box{background:#fff;border:1.5px solid #eee;border-radius:16px;padding:16px 20px;text-align:center;margin-bottom:10px}
 .chosung-text{font-size:30px;font-weight:800;letter-spacing:10px;color:#222}
 .chosung-hint{font-size:12px;color:#ccc;margin-top:4px}
@@ -115,26 +81,23 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .chosung-input.wrong{border-color:#EF5350;background:#FFEBEE;color:#C62828}
 .submit-btn{padding:14px;border-radius:14px;background:#111;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer}
 .submit-btn:disabled{background:#ddd;color:#aaa;cursor:default}
-
 .hint-bar{display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;gap:8px}
 .hint-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:99px;border:1.5px solid #FFB300;background:#FFF8E1;color:#F57F17;font-size:12px;font-weight:700;cursor:pointer}
 .hint-btn.disabled{opacity:.35;cursor:default;pointer-events:none}
 .hint-ad-btn{padding:7px 14px;border-radius:99px;border:1.5px solid #ddd;background:#f5f5f5;color:#888;font-size:12px;cursor:pointer}
-
 .feedback{text-align:center;padding:10px 0;font-size:14px;font-weight:700;min-height:24px}
 .feedback.correct{color:#4CAF50}
 .feedback.wrong{color:#EF5350}
 
-/* ── RESULT ── */
+/* RESULT */
 .result-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center}
 .result-emoji{font-size:64px;margin-bottom:16px}
 .result-title{font-size:24px;font-weight:800;color:#111;margin-bottom:8px}
-.result-sub{font-size:14px;color:#888;margin-bottom:24px;line-height:1.7;white-space:pre-line}
+.result-sub{font-size:14px;color:#888;margin-bottom:24px;line-height:1.7}
 .result-score{font-size:52px;font-weight:900;color:#111;margin-bottom:4px;letter-spacing:-2px}
 .result-score-label{font-size:12px;color:#bbb;margin-bottom:8px}
 .result-best{font-size:13px;color:#aaa;margin-bottom:24px}
 .result-best span{font-weight:700;color:#FF9800}
-.stars-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:28px}
 .result-btns{display:flex;flex-direction:column;gap:10px;width:100%}
 .btn-primary{padding:15px;border-radius:16px;background:#111;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer}
 .btn-secondary{padding:15px;border-radius:16px;background:#fff;color:#555;font-size:15px;font-weight:600;border:1.5px solid #e8e8e8;cursor:pointer}
@@ -182,12 +145,12 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
       <div class="prog-info"><span id="progText"></span><span id="progCorrect">정답 0</span></div>
     </div>
     <div class="quiz-body" id="quizBody"></div>
-    <div class="ad-banner" id="quizAdBanner" style="height:auto;min-height:50px;padding:4px 0"></div>
+    <div class="ad-banner" id="quizAdBanner"></div>
   </div>
 
   <div class="screen" id="screenResult">
     <div class="result-wrap" id="resultWrap"></div>
-    <div class="ad-banner" id="resultAdBanner" style="height:auto;min-height:50px;padding:4px 0"></div>
+    <div class="ad-banner" id="resultAdBanner"></div>
   </div>
 </div>
 
@@ -211,12 +174,10 @@ const FALLBACK=[
   ['7','강남구청','청담','학동'],['8','잠실','몽촌토성','석촌'],
   ['9','여의도','국회의사당','샛강'],
 ];
-
 const MODES={
-  infinite:{id:'infinite',name:'무한 모드',desc:'전 노선 · 목숨 3개',color:'#3949AB',chosungRatio:.3,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  infinite:{id:'infinite',name:'역 이름 맞추기',desc:'전 노선 · 목숨 3개',color:'#3949AB',chosungRatio:.3,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
   daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 10문제',color:'#00897B',chosungRatio:.3,lines:['1','2','3','4','5','6','7','8','9'],qCount:10},
 };
-
 const S={
   totalScore:parseInt(localStorage.getItem('tS')||'0'),
   bestScore:parseInt(localStorage.getItem('bS')||'0'),
@@ -246,6 +207,14 @@ function checkHintReset(){if(S.hintDate!==today()){S.hintCount=3;S.hintDate=toda
 async function loadStations(){
   try{const res=await fetch('stations.json');const data=await res.json();STATIONS=data.filter(s=>s[2]!=='-'&&s[3]!=='-');}
   catch(e){STATIONS=[...FALLBACK];}
+}
+
+function renderAd(id){
+  try{
+    if(typeof PartnersCoupang!=='undefined'){
+      new PartnersCoupang.G({containerId:id});
+    }
+  }catch(e){}
 }
 
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
@@ -299,16 +268,12 @@ function miniMap(prev,next,color){
   </div>`;
 }
 
-// ── HOME ──
 function renderHome(){
   const el=document.getElementById('screenHome');
   const isDone=S.dailyDone&&S.dailyDate===today();
   el.innerHTML=`
     <div class="hdr">
-      <div>
-        <div class="hdr-title">🚇 지하철 퀴즈</div>
-        <div class="hdr-sub">수도권 ${STATIONS.length}개 역</div>
-      </div>
+      <div class="hdr-title">🚇 지하철 종결자</div>
       <div class="score-display">${S.totalScore.toLocaleString()}점</div>
     </div>
     <div class="home-hero">
@@ -342,19 +307,19 @@ function renderHome(){
           <div class="mc-chip">전 노선</div>
         </div>
       </div>
-      <div class="daily-card${isDone?' done':''}" style="background:linear-gradient(135deg,#004D40,#00897B)" onclick="${isDone?'':'startMode(\'daily\')'}">
+      <div class="daily-card${isDone?' done':''}" style="background:linear-gradient(135deg,#004D40,#00897B)" onclick="${isDone?'':'startMode(&quot;daily&quot;)'}">
         <div class="mc-label" style="color:rgba(255,255,255,.7)">TODAY'S CHALLENGE</div>
         <div class="mc-title" style="font-size:20px;font-weight:800;color:#fff;margin-bottom:3px">데일리 챌린지</div>
         <div class="mc-sub" style="font-size:12px;color:rgba(255,255,255,.65)">${isDone?'오늘은 이미 완료했어요':'매일 새로운 10문제 · 하루 1회'}</div>
         <div class="mc-icon">📅</div>
         <div class="mc-row">
           <div class="mc-chip">${today()}</div>
-          ${isDone?`<div class="mc-chip">✓ ${S.dailyScore.toLocaleString()}점</div>`:'<div class="mc-chip">10문제</div>'}
+          ${isDone?'<div class="mc-chip">✓ '+S.dailyScore.toLocaleString()+'점</div>':'<div class="mc-chip">10문제</div>'}
         </div>
         ${isDone?'<div class="dc-done-badge">완료</div>':''}
       </div>
     </div>
-    <div class="ad-banner" id="homeAdBanner" style="height:auto;min-height:50px;padding:4px 0"></div>`;
+    <div class="ad-banner" id="homeAdBanner"></div>`;
   showScreen('screenHome');
   renderAd('homeAdBanner');
 }
@@ -363,23 +328,20 @@ function startMode(modeId){
   const mode=MODES[modeId];
   S.currentMode=mode;
   const isDaily=modeId==='daily';
-  const count=isDaily?mode.qCount:999;
   S.questions=isDaily?generateQuestions(mode,today(),mode.qCount):generateQuestions(mode,null,50);
   S.qIndex=0;S.correct=0;S.score=0;S.combo=0;S.lives=3;S.answered=false;
   document.getElementById('quizModeName').textContent=mode.name;
   document.getElementById('quizModeDesc').textContent=mode.desc;
   document.getElementById('progFill').style.background=mode.color;
   showScreen('screenQuiz');
+  renderAd('quizAdBanner');
   renderQuestion();
-  renderAd('quizAdBanner'
 }
 
 function renderQuestion(){
   const q=S.questions[S.qIndex];
   const isDaily=S.currentMode.id==='daily';
-  const total=isDaily?S.questions.length:'∞';
   S.answered=false;
-
   if(isDaily){
     document.getElementById('progFill').style.width=(S.qIndex/S.questions.length*100)+'%';
     document.getElementById('progText').textContent=`${S.qIndex+1}/${S.questions.length}`;
@@ -398,7 +360,7 @@ function renderQuestion(){
     <div class="hint-bar">
       <span style="font-size:12px;color:#ccc">💡 ${S.hintCount}개</span>
       <button class="hint-btn${hintDisabled?' disabled':''}" onclick="useHint()">💡 힌트</button>
-      ${S.hintCount===0?`<button class="hint-ad-btn" onclick="watchAd()">📺 충전</button>`:''}
+      ${S.hintCount===0?'<button class="hint-ad-btn" onclick="watchAd()">📺 충전</button>':''}
     </div>`;
 
   const body=document.getElementById('quizBody');
@@ -498,7 +460,6 @@ function handleResult(correct){
   const isEnd=S.lives<=0||(isDaily&&S.qIndex+1>=S.questions.length);
   setTimeout(()=>{
     if(isEnd){showResult();return;}
-    // 무한모드: 문제 소진시 추가 생성
     S.qIndex++;
     if(S.qIndex>=S.questions.length){
       S.questions=[...S.questions,...generateQuestions(S.currentMode,null,20)];
@@ -514,8 +475,7 @@ function showResult(){
   S.totalPlayed++;
   if(isDaily){S.dailyDate=today();S.dailyDone=true;S.dailyScore=S.score;}
   save();
-
-  const emoji=S.lives<=0?'😢':S.correct>=S.questions.slice(0,S.qIndex+1).length?'🏆':'🎉';
+  const emoji=S.lives<=0?'😢':S.correct>=S.qIndex?'🏆':'🎉';
   document.getElementById('resultWrap').innerHTML=`
     <div class="result-emoji">${emoji}</div>
     <div class="result-title">${isDaily?'데일리 완료!':S.lives<=0?'게임 오버':'대단해요!'}</div>
@@ -528,19 +488,11 @@ function showResult(){
       <button class="btn-secondary" onclick="renderHome()">홈으로</button>
     </div>`;
   showScreen('screenResult');
-  renderAd('resultAdBanner')
+  renderAd('resultAdBanner');
 }
 
 function showCombo(n){const el=document.getElementById('comboBadge');el.textContent=`🔥 ${n}콤보!`;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1200);}
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2000);}
-
-function renderAd(containerId){
-  const el=document.getElementById(containerId);
-  if(!el)return;
-  if(typeof PartnersCoupang!=='undefined'){
-    new PartnersCoupang.G({containerId});
-  }
-}
 
 async function init(){checkHintReset();await loadStations();renderHome();}
 init();
