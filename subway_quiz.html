@@ -148,6 +148,10 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .spinner{width:32px;height:32px;border:3px solid #eee;border-top-color:#2196F3;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
+	<script src="https://ads-partners.coupang.com/g.js"></script>
+<script>
+	new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
+</script>
 </head>
 <body>
 <div class="phone">
@@ -178,18 +182,12 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
       <div class="prog-info"><span id="progText"></span><span id="progCorrect">정답 0</span></div>
     </div>
     <div class="quiz-body" id="quizBody"></div>
-    <div class="ad-banner"><script src="https://ads-partners.coupang.com/g.js"></script>
-<script>
-	new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
-</script></div>
+    <div class="ad-banner" id="quizAdBanner" style="height:auto;min-height:50px;padding:4px 0"></div>
   </div>
 
   <div class="screen" id="screenResult">
     <div class="result-wrap" id="resultWrap"></div>
-    <div class="ad-banner"><script src="https://ads-partners.coupang.com/g.js"></script>
-<script>
-	new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
-</script></div>
+    <div class="ad-banner" id="resultAdBanner" style="height:auto;min-height:50px;padding:4px 0"></div>
   </div>
 </div>
 
@@ -356,11 +354,9 @@ function renderHome(){
         ${isDone?'<div class="dc-done-badge">완료</div>':''}
       </div>
     </div>
-    <div class="ad-banner" style="height:auto;min-height:50px;padding:4px 0">
-      <script src="https://ads-partners.coupang.com/g.js"></script>
-      <script>new PartnersCoupang.G();</script>
-    </div>`;
+    <div class="ad-banner" id="homeAdBanner" style="height:auto;min-height:50px;padding:4px 0"></div>`;
   showScreen('screenHome');
+  renderAd('homeAdBanner');
 }
 
 function startMode(modeId){
@@ -375,6 +371,7 @@ function startMode(modeId){
   document.getElementById('progFill').style.background=mode.color;
   showScreen('screenQuiz');
   renderQuestion();
+  renderAd('quizAdBanner'
 }
 
 function renderQuestion(){
@@ -531,10 +528,19 @@ function showResult(){
       <button class="btn-secondary" onclick="renderHome()">홈으로</button>
     </div>`;
   showScreen('screenResult');
+  renderAd('resultAdBanner')
 }
 
 function showCombo(n){const el=document.getElementById('comboBadge');el.textContent=`🔥 ${n}콤보!`;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1200);}
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2000);}
+
+function renderAd(containerId){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  if(typeof PartnersCoupang!=='undefined'){
+    new PartnersCoupang.G({containerId});
+  }
+}
 
 async function init(){checkHintReset();await loadStations();renderHome();}
 init();
