@@ -51,7 +51,8 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .prog-bar{height:4px;background:#f0f0f0;border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;border-radius:2px;transition:width .4s}
 .prog-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:#bbb}
-.quiz-body{padding:14px 16px;flex:1;display:flex;flex-direction:column}
+.quiz-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;padding-bottom:58px;align-items:center}
+.quiz-body>*{width:100%;max-width:360px}
 .quiz-type-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:99px;margin-bottom:12px}
 .badge-a{background:#E3F2FD;color:#1565C0}
 .badge-b{background:#FFF8E1;color:#F57F17}
@@ -142,7 +143,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
       <div class="prog-info"><span id="progText"></span><span id="progCorrect">정답 0</span></div>
     </div>
     <div class="quiz-body" id="quizBody"></div>
-    <div class="ad-banner" id="quizAdBanner"></div>
+    <div class="ad-banner" id="quizAdBanner" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;z-index:50"></div>
   </div>
 
   <div class="screen" id="screenResult">
@@ -152,6 +153,10 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 </div>
 
 <script>
+// ✅ 여기에 쿠팡 파트너스 ID만 입력하세요
+const COUPANG_ID = YOUR_ID_HERE;
+const COUPANG_CODE = "AF5441763";
+
 function renderAd(containerId) {
   const container = document.getElementById(containerId);
   if (!container || container.querySelector('iframe.ad-frame')) return;
