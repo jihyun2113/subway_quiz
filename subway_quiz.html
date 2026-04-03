@@ -156,13 +156,20 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 const COUPANG_ID = 977582;
 const COUPANG_CODE = "AF5441763";
 
+const adRendered = {};
 function renderAd(containerId) {
+  // 이미 광고가 렌더링된 컨테이너는 스킵
+  if (adRendered[containerId]) return;
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
+  // 삐져나오지 않도록 미리 클리핑
+  container.style.overflow = 'hidden';
+  container.style.position = 'relative';
 
   const wait = (retry = 0) => {
     if (typeof PartnersCoupang !== 'undefined') {
+      adRendered[containerId] = true;
       new PartnersCoupang.G({
         "id": COUPANG_ID,
         "template": "carousel",
@@ -171,25 +178,22 @@ function renderAd(containerId) {
         "height": "50",
         "tsource": ""
       });
-
-      // 광고 생성 후 scale로 강제 축소
+      // scale로 강제 축소
       const scaleAd = (retry2 = 0) => {
         const el = container.firstElementChild;
         if (el) {
-          const containerW = container.offsetWidth;
-          const adW = el.scrollWidth || 390;
-          if (containerW > 0 && adW > containerW) {
-            const ratio = containerW / adW;
+          const containerW = container.offsetWidth || window.innerWidth;
+          const ratio = containerW / 390;
+          if (ratio < 1) {
             el.style.transformOrigin = 'left top';
             el.style.transform = `scale(${ratio})`;
             container.style.height = Math.round(50 * ratio) + 'px';
           }
-        } else if (retry2 < 20) {
-          setTimeout(() => scaleAd(retry2 + 1), 100);
+        } else if (retry2 < 15) {
+          setTimeout(() => scaleAd(retry2 + 1), 150);
         }
       };
-      setTimeout(() => scaleAd(), 500);
-
+      setTimeout(() => scaleAd(), 300);
     } else if (retry < 20) {
       setTimeout(() => wait(retry + 1), 200);
     }
