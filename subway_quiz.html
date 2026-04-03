@@ -160,25 +160,36 @@ function renderAd(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
-  const adWidth = Math.min(window.innerWidth, 390);
+
   const wait = (retry = 0) => {
     if (typeof PartnersCoupang !== 'undefined') {
       new PartnersCoupang.G({
         "id": COUPANG_ID,
         "template": "carousel",
         "trackingCode": COUPANG_CODE,
-        "width": String(adWidth),
+        "width": "390",
         "height": "50",
         "tsource": ""
       });
-      // iframe 너비 강제 조정
-      setTimeout(() => {
-        const iframe = container.querySelector('iframe');
-        if (iframe) {
-          iframe.style.maxWidth = '100%';
-          iframe.style.width = adWidth + 'px';
+
+      // 광고 생성 후 scale로 강제 축소
+      const scaleAd = (retry2 = 0) => {
+        const el = container.firstElementChild;
+        if (el) {
+          const containerW = container.offsetWidth;
+          const adW = el.scrollWidth || 390;
+          if (containerW > 0 && adW > containerW) {
+            const ratio = containerW / adW;
+            el.style.transformOrigin = 'left top';
+            el.style.transform = `scale(${ratio})`;
+            container.style.height = Math.round(50 * ratio) + 'px';
+          }
+        } else if (retry2 < 20) {
+          setTimeout(() => scaleAd(retry2 + 1), 100);
         }
-      }, 800);
+      };
+      setTimeout(() => scaleAd(), 500);
+
     } else if (retry < 20) {
       setTimeout(() => wait(retry + 1), 200);
     }
