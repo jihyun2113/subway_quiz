@@ -189,9 +189,9 @@ const FALLBACK=[
   ['9','여의도','국회의사당','샛강'],
 ];
 const MODES={
-  next:{id:'next',name:'다음역 맞추기',desc:'전 노선 · 목숨 3개 · 4지선다',color:'#3949AB',chosungRatio:0,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
-  chosung:{id:'chosung',name:'초성 퀴즈',desc:'전 노선 · 목숨 3개 · 글자 선택',color:'#E65100',chosungRatio:1,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
-  daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 최고점 도전 · 무제한',color:'#00897B',chosungRatio:.5,lines:['1','2','3','4','5','6','7','8','9']},
+  next:{id:'next',name:'다음역 맞추기',desc:'목숨 3개',color:'#3949AB',chosungRatio:0,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  chosung:{id:'chosung',name:'초성 퀴즈',desc:'목숨 3개',color:'#E65100',chosungRatio:1,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 최고점 도전',color:'#00897B',chosungRatio:.5,lines:['1','2','3','4','5','6','7','8','9']},
 };
 const S={
   totalScore:parseInt(localStorage.getItem('tS')||'0'),
@@ -318,11 +318,12 @@ function renderHome(){
       <div class="daily-card" style="background:linear-gradient(135deg,#00897B,#26A69A)" onclick="startMode('daily')">
         <div class="mc-label" style="color:rgba(255,255,255,.7)">TODAY'S CHALLENGE</div>
         <div class="mc-title" style="font-size:20px;font-weight:800;color:#fff;margin-bottom:3px">데일리 챌린지</div>
-        <div class="mc-sub" style="font-size:12px;color:rgba(255,255,255,.65)">오늘의 최고점 도전 · 무제한</div>
+        <div class="mc-sub" style="font-size:12px;color:rgba(255,255,255,.65)">오늘의 최고점 도전</div>
         <div class="mc-icon">📅</div>
         <div class="mc-row">
           <div class="mc-chip">${today()}</div>
-          ${S.dailyDate===today()&&S.dailyScore>0?'<div class="mc-chip">최고 '+S.dailyScore.toLocaleString()+'점</div>':'<div class="mc-chip">혼합 문제</div>'}
+          <div class="mc-chip">무제한</div>
+          ${S.dailyDate===today()&&S.dailyScore>0?'<div class="mc-chip">최고 '+S.dailyScore.toLocaleString()+'점</div>':''}
         </div>
       </div>
     </div>
