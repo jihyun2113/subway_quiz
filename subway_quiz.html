@@ -26,7 +26,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .stat-chip{flex:1;background:#f7f8fa;border-radius:12px;padding:10px 8px;text-align:center}
 .stat-v{font-size:18px;font-weight:800;color:#111}
 .stat-l{font-size:10px;color:#bbb;margin-top:2px}
-.home-cards{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.home-cards{padding:14px 16px 72px 16px;display:flex;flex-direction:column;gap:10px}
 .mode-card{border-radius:20px;padding:22px 20px;cursor:pointer;transition:transform .1s;position:relative;overflow:hidden}
 .mode-card:active{transform:scale(.98)}
 .mc-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:4px}
@@ -322,7 +322,7 @@ function renderHome(){
         ${isDone?'<div class="dc-done-badge">완료</div>':''}
       </div>
     </div>
-    <div class="ad-banner" id="homeAdBanner"></div>`;
+    <div class="ad-banner" id="homeAdBanner" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;z-index:50"></div>`;
   showScreen('screenHome');
   renderAd('homeAdBanner');
 }
