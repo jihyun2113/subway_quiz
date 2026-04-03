@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>지하철 퀴즈</title>
-<script src="https://ads-partners.coupang.com/g.js"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2f5;display:flex;justify-content:center;min-height:100vh;overflow-x:hidden}
@@ -153,52 +153,18 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 
 <script>
 // ✅ 여기에 쿠팡 파트너스 ID만 입력하세요
-const COUPANG_ID = 977582;
+const COUPANG_ID = YOUR_ID_HERE;
 const COUPANG_CODE = "AF5441763";
 
-const adRendered = {};
 function renderAd(containerId) {
-  // 이미 광고가 렌더링된 컨테이너는 스킵
-  if (adRendered[containerId]) return;
   const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = '';
-  // 삐져나오지 않도록 미리 클리핑
-  container.style.overflow = 'hidden';
-  container.style.position = 'relative';
-
-  const wait = (retry = 0) => {
-    if (typeof PartnersCoupang !== 'undefined') {
-      adRendered[containerId] = true;
-      new PartnersCoupang.G({
-        "id": COUPANG_ID,
-        "template": "carousel",
-        "trackingCode": COUPANG_CODE,
-        "width": "390",
-        "height": "50",
-        "tsource": ""
-      });
-      // scale로 강제 축소
-      const scaleAd = (retry2 = 0) => {
-        const el = container.firstElementChild;
-        if (el) {
-          const containerW = container.offsetWidth || window.innerWidth;
-          const ratio = containerW / 390;
-          if (ratio < 1) {
-            el.style.transformOrigin = 'left top';
-            el.style.transform = `scale(${ratio})`;
-            container.style.height = Math.round(50 * ratio) + 'px';
-          }
-        } else if (retry2 < 15) {
-          setTimeout(() => scaleAd(retry2 + 1), 150);
-        }
-      };
-      setTimeout(() => scaleAd(), 300);
-    } else if (retry < 20) {
-      setTimeout(() => wait(retry + 1), 200);
-    }
-  };
-  wait();
+  if (!container || container.querySelector('iframe.ad-frame')) return;
+  const iframe = document.createElement('iframe');
+  iframe.className = 'ad-frame';
+  iframe.src = 'ad.html';
+  iframe.style.cssText = 'width:100%;height:50px;border:none;display:block';
+  iframe.scrolling = 'no';
+  container.appendChild(iframe);
 }
 
 const LINES={
