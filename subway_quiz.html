@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>지하철 퀴즈</title>
-<script src="https://ads-partners.coupang.com/g.js"></script>
+<script src="https://ads-partners.coupang.com/g.js" onload="initAds()"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2f5;display:flex;justify-content:center;min-height:100vh}
@@ -111,10 +111,6 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .spinner{width:32px;height:32px;border:3px solid #eee;border-top-color:#2196F3;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
-	<script src="https://ads-partners.coupang.com/g.js"></script>
-<script>
-	new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
-</script>
 </head>
 <body>
 <div class="phone">
@@ -127,6 +123,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
       <div class="spinner"></div>
       <p>역 데이터 불러오는 중...</p>
     </div>
+    <div class="ad-banner" id="homeAdBanner"></div>
   </div>
 
   <div class="screen" id="screenQuiz">
@@ -209,13 +206,13 @@ async function loadStations(){
   catch(e){STATIONS=[...FALLBACK];}
 }
 
-function renderAd(id){
-  try{
-    if(typeof PartnersCoupang!=='undefined'){
-      new PartnersCoupang.G({"id":0000,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
-    }
-  }catch(e){}
+function initAds(){
+  ['homeAdBanner','quizAdBanner','resultAdBanner'].forEach(id=>{
+    try{new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});}catch(e){}
+  });
 }
+
+function renderAd(id){}
 
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
 function pick(a,n){return shuffle(a).slice(0,n);}
