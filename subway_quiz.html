@@ -212,7 +212,27 @@ function initAds(){
   });
 }
 
-function renderAd(id){}
+function renderAd(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  const wait = (retry = 0) => {
+    if (typeof PartnersCoupang !== 'undefined') {
+      new PartnersCoupang.G({
+        "id": 0000,
+        "template": "carousel",
+        "trackingCode": "AF5441763",
+        "width": "390",
+        "height": "50",
+        "tsource": ""
+      });
+    } else if (retry < 20) {
+      setTimeout(() => wait(retry + 1), 200);
+    }
+  };
+  wait();
+}
 
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
 function pick(a,n){return shuffle(a).slice(0,n);}
