@@ -57,18 +57,18 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .badge-a{background:#E3F2FD;color:#1565C0}
 .badge-b{background:#FFF8E1;color:#F57F17}
 .line-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px 6px 6px;border-radius:99px;margin-bottom:12px}
-.line-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
-.line-name{font-size:13px;font-weight:700}
+.line-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.line-name{font-size:16px;font-weight:700}
 .question-card{border-radius:18px;padding:18px;margin-bottom:14px;background:#fff;border:1.5px solid #eee}
 .mm-track{display:flex;align-items:flex-end;justify-content:center;gap:0;padding:4px 0 2px}
 .mm-stop{display:flex;flex-direction:column;align-items:center;gap:5px}
-.mm-label{font-size:13px;font-weight:600;color:#bbb;text-align:center;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mm-label.cur{font-size:26px;font-weight:900;color:#111}
+.mm-label{font-size:15px;font-weight:600;color:#bbb;text-align:center;max-width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mm-label.cur{font-size:32px;font-weight:900;color:#111}
 .mm-dot{width:10px;height:10px;border-radius:50%;background:#ddd;border:2px solid #ddd}
 .mm-dot.cur{width:14px;height:14px}
 .mm-seg{height:3px;width:40px;border-radius:2px;background:#eee;margin-bottom:7px}
 .options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
-.opt-btn{padding:16px 10px;border-radius:14px;border:1.5px solid #eee;background:#fff;font-size:14px;font-weight:700;color:#222;text-align:center;cursor:pointer;transition:all .12s;min-height:68px;display:flex;align-items:center;justify-content:center;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.opt-btn{padding:16px 10px;border-radius:14px;border:1.5px solid #eee;background:#fff;font-size:16px;font-weight:700;color:#222;text-align:center;cursor:pointer;transition:all .12s;min-height:68px;display:flex;align-items:center;justify-content:center;line-height:1.3;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .opt-btn:active{transform:scale(.96)}
 .opt-btn.eliminated{opacity:.2;pointer-events:none;text-decoration:line-through}
 .opt-btn.correct{background:#E8F5E9;border-color:#4CAF50;color:#2E7D32}
@@ -104,7 +104,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 .btn-primary{padding:15px;border-radius:16px;background:#111;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer}
 .btn-secondary{padding:15px;border-radius:16px;background:#fff;color:#555;font-size:15px;font-weight:600;border:1.5px solid #e8e8e8;cursor:pointer}
 
-.combo-badge{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:#FF6F00;color:#fff;padding:7px 18px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
+.combo-badge{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#FF6F00;color:#fff;padding:8px 20px;border-radius:99px;font-size:15px;font-weight:700;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99;display:none}
 .combo-badge.show{opacity:1}
 .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;white-space:nowrap}
 .toast.show{opacity:1}
@@ -361,7 +361,8 @@ function renderQuestion(){
   const hintDisabled=S.hintCount<=0||q.type==='B';
   const hintBar=`
     <div class="hint-bar">
-      <span style="font-size:12px;color:#ccc">💡 ${S.hintCount}개</span>
+      <span id="comboBadgeInline" style="font-size:13px;font-weight:700;color:#FF6F00;opacity:0;transition:opacity .3s;margin-right:auto"></span>
+      <span style="font-size:12px;font-weight:700;color:#888">💡 ${S.hintCount}개</span>
       <button class="hint-btn${hintDisabled?' disabled':''}" onclick="useHint()">💡 힌트</button>
       ${S.hintCount===0?'<button class="hint-ad-btn" onclick="watchAd()">📺 충전</button>':''}
     </div>`;
@@ -369,12 +370,11 @@ function renderQuestion(){
   const body=document.getElementById('quizBody');
   if(q.type==='A'){
     body.innerHTML=`
-      <div class="quiz-type-badge badge-a">🔵 역 이름 맞추기</div>
-      <div class="line-pill" style="background:${lc}12;border:1.5px solid ${lc}35">
+      <div class="line-pill" style="background:${lc}33;border:1.5px solid ${lc}">
         <div class="line-dot" style="background:${lc}">${q.line}</div>
         <div class="line-name" style="color:${lc}">${line.name}</div>
       </div>
-      <div class="question-card" style="border-color:${lc}30">
+      <div class="question-card" style="border-color:${lc};border-width:2px">
         ${miniMap(q.prev,q.next,lc)}
       </div>
       ${hintBar}
@@ -385,11 +385,11 @@ function renderQuestion(){
   }else{
     body.innerHTML=`
       <div class="quiz-type-badge badge-b">🟡 초성 퀴즈</div>
-      <div class="line-pill" style="background:${lc}12;border:1.5px solid ${lc}35">
+      <div class="line-pill" style="background:${lc}33;border:1.5px solid ${lc}">
         <div class="line-dot" style="background:${lc}">${q.line}</div>
         <div class="line-name" style="color:${lc}">${line.name}</div>
       </div>
-      <div class="question-card" style="border-color:${lc}30">
+      <div class="question-card" style="border-color:${lc};border-width:2px">
         ${miniMap(q.prev,q.next,lc)}
       </div>
       <div class="chosung-box">
@@ -494,7 +494,13 @@ function showResult(){
   renderAd('resultAdBanner');
 }
 
-function showCombo(n){const el=document.getElementById('comboBadge');el.textContent=`🔥 ${n}콤보!`;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1200);}
+function showCombo(n){
+  const el=document.getElementById('comboBadgeInline');
+  if(!el)return;
+  el.textContent=`🔥 ${n}콤보!`;
+  el.style.opacity='1';
+  setTimeout(()=>el.style.opacity='0',1200);
+}
 function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2000);}
 
 async function init(){checkHintReset();await loadStations();renderHome();}
