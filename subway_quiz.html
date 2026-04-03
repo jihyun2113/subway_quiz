@@ -153,9 +153,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
 </div>
 
 <script>
-// ✅ 여기에 쿠팡 파트너스 ID만 입력하세요
-const COUPANG_ID = YOUR_ID_HERE;
-const COUPANG_CODE = "AF5441763";
+
 
 function renderAd(containerId) {
   const container = document.getElementById(containerId);
@@ -258,17 +256,17 @@ function miniMap(prev,next,color){
   return`<div class="mm-track">
     <div class="mm-stop">
       <div class="mm-label">${prev||'첫번째역'}</div>
-      <div class="mm-dot" style="background:${color}55;border-color:${color}55"></div>
+      <div class="mm-dot" style="background:${color};border-color:${color};opacity:.5"></div>
     </div>
-    <div class="mm-seg" style="background:${color}44"></div>
+    <div class="mm-seg" style="background:${color};opacity:.6"></div>
     <div class="mm-stop">
       <div class="mm-label cur" style="color:${color}">?</div>
-      <div class="mm-dot cur" style="background:${color};border-color:${color};box-shadow:0 0 0 4px ${color}25"></div>
+      <div class="mm-dot cur" style="background:${color};border-color:${color};box-shadow:0 0 0 5px ${color}44"></div>
     </div>
-    <div class="mm-seg" style="background:${color}44"></div>
+    <div class="mm-seg" style="background:${color};opacity:.6"></div>
     <div class="mm-stop">
       <div class="mm-label">${next||'마지막역'}</div>
-      <div class="mm-dot" style="background:${color}55;border-color:${color}55"></div>
+      <div class="mm-dot" style="background:${color};border-color:${color};opacity:.5"></div>
     </div>
   </div>`;
 }
