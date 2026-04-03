@@ -178,23 +178,18 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#f0f2
       <div class="prog-info"><span id="progText"></span><span id="progCorrect">정답 0</span></div>
     </div>
     <div class="quiz-body" id="quizBody"></div>
-    <div class="ad-banner" style="height:auto;min-height:50px;padding:4px 0">
-  <script src="https://ads-partners.coupang.com/g.js"></script>
+    <div class="ad-banner"><script src="https://ads-partners.coupang.com/g.js"></script>
 <script>
 	new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
-</script>
-	</div>
-</div>
+</script></div>
   </div>
 
   <div class="screen" id="screenResult">
     <div class="result-wrap" id="resultWrap"></div>
-    <div class="ad-banner" style="height:auto;min-height:50px;padding:4px 0">
-  <script src="https://ads-partners.coupang.com/g.js"></script>
+    <div class="ad-banner"><script src="https://ads-partners.coupang.com/g.js"></script>
 <script>
 	new PartnersCoupang.G({"id":977582,"template":"carousel","trackingCode":"AF5441763","width":"390","height":"50","tsource":""});
-</script>
-</div>
+</script></div>
   </div>
 </div>
 
@@ -361,7 +356,10 @@ function renderHome(){
         ${isDone?'<div class="dc-done-badge">완료</div>':''}
       </div>
     </div>
-    <div class="ad-banner"><span>AD BANNER</span></div>`;
+    <div class="ad-banner" style="height:auto;min-height:50px;padding:4px 0">
+      <script src="https://ads-partners.coupang.com/g.js"></script>
+      <script>new PartnersCoupang.G();</script>
+    </div>`;
   showScreen('screenHome');
 }
 
