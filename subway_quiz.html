@@ -82,11 +82,27 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#fff;
 .loading-wrap p{font-size:15px;color:#bbb}
 .spinner{width:32px;height:32px;border:3px solid #eee;border-top-color:#2196F3;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center}
+.confirm-box{background:#fff;border-radius:20px;padding:28px 24px 20px;width:280px;text-align:center}
+.confirm-box p{font-size:16px;font-weight:700;color:#111;margin-bottom:20px;line-height:1.5}
+.confirm-box .btn-row{display:flex;gap:10px}
+.confirm-box .btn-row button{flex:1;padding:13px;border-radius:14px;font-size:15px;font-weight:700;border:none;cursor:pointer}
+.confirm-box .btn-cancel{background:#f5f5f5;color:#555}
+.confirm-box .btn-ok{background:#111;color:#fff}
 </style>
 </head>
 <body>
 <div class="phone">
   <div class="toast" id="toast"></div>
+  <div class="confirm-overlay" id="confirmOverlay" style="display:none">
+    <div class="confirm-box">
+      <p>진행 중인 게임을<br>포기할까요?</p>
+      <div class="btn-row">
+        <button class="btn-cancel" onclick="closeConfirm()">계속하기</button>
+        <button class="btn-ok" onclick="closeConfirm(true)">포기하기</button>
+      </div>
+    </div>
+  </div>
 
   <div class="screen active" id="screenHome">
     <div class="loading-wrap">
@@ -506,7 +522,8 @@ function showResult(){
   renderAd('resultAdBanner');
 }
 
-function confirmQuit(){if(confirm('진행 중인 게임을 포기할까요?'))renderHome();}
+function confirmQuit(){document.getElementById('confirmOverlay').style.display='flex';}
+function closeConfirm(ok){document.getElementById('confirmOverlay').style.display='none';if(ok)renderHome();}
 function showCombo(n){
   const el=document.getElementById('comboInline');
   if(!el)return;
