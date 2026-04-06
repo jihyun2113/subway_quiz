@@ -10,7 +10,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#fff;
 .phone{width:100%;max-width:390px;min-height:100vh;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 .screen{flex:1;display:none;flex-direction:column;overflow-y:auto}
 .screen.active{display:flex}
-.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:90px;display:flex;align-items:center;justify-content:center}
+.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:70px;display:flex;align-items:center;justify-content:center}
 
 /* HOME */
 .home-cards{padding:14px 16px 98px;display:flex;flex-direction:column;gap:10px;background:#fff;position:relative;z-index:1}
@@ -132,7 +132,7 @@ function renderAd(id){
   if(!c)return;
   const f=document.createElement('iframe');
   f.src='ad.html';
-  f.style.cssText='width:100%;height:90px;border:none;display:block';
+  f.style.cssText='width:100%;height:70px;border:none;display:block';
   f.scrolling='no';
   c.appendChild(f);
   adRendered[id]=true;
