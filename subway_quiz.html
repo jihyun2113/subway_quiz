@@ -10,7 +10,7 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#fff;
 .phone{width:100%;max-width:390px;min-height:100vh;background:#fff;display:flex;flex-direction:column;overflow:hidden}
 .screen{flex:1;display:none;flex-direction:column;overflow-y:auto}
 .screen.active{display:flex}
-.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:70px;display:flex;align-items:center;justify-content:center}
+.ad-banner{width:100%;overflow:hidden;background:#fff;border-top:1px solid #eee;flex-shrink:0;min-height:50px;display:flex;align-items:center;justify-content:center}
 
 /* HOME */
 .home-cards{padding:14px 16px 98px;display:flex;flex-direction:column;gap:10px;background:#fff;position:relative;z-index:1}
@@ -89,6 +89,18 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#fff;
 .confirm-box .btn-row button{flex:1;padding:13px;border-radius:14px;font-size:15px;font-weight:700;border:none;cursor:pointer}
 .confirm-box .btn-cancel{background:#f5f5f5;color:#555}
 .confirm-box .btn-ok{background:#111;color:#fff}
+
+/* 광고 리워드 오버레이 */
+.reward-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.reward-box{background:#fff;border-radius:24px;width:320px;overflow:hidden;text-align:center}
+.reward-ad-area{width:100%;min-height:100px;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+.reward-body{padding:24px 20px 20px}
+.reward-title{font-size:18px;font-weight:800;color:#111;margin-bottom:6px}
+.reward-desc{font-size:13px;color:#888;margin-bottom:20px;line-height:1.5}
+.reward-countdown{font-size:13px;color:#bbb;margin-bottom:12px;min-height:20px}
+.reward-btn{width:100%;padding:15px;border-radius:14px;background:#111;color:#fff;font-size:15px;font-weight:700;border:none;cursor:pointer}
+.reward-btn:disabled{background:#ddd;color:#aaa;cursor:default}
+.reward-quit{margin-top:14px;font-size:13px;color:rgba(255,255,255,.5);cursor:pointer;padding:6px;display:none}
 </style>
 </head>
 <body>
@@ -102,6 +114,19 @@ body{font-family:-apple-system,'Apple SD Gothic Neo',sans-serif;background:#fff;
         <button class="btn-ok" onclick="closeConfirm(true)">포기하기</button>
       </div>
     </div>
+  </div>
+
+  <div class="reward-overlay" id="rewardOverlay" style="display:none">
+    <div class="reward-box">
+      <div class="reward-ad-area" id="rewardAdArea"></div>
+      <div class="reward-body">
+        <div class="reward-title">💔 목숨이 없어요</div>
+        <div class="reward-desc">광고를 보고 목숨을 1개 받으세요</div>
+        <div class="reward-countdown" id="rewardCountdown"></div>
+        <button class="reward-btn" id="rewardBtn" disabled onclick="receiveLife()">❤️ 목숨 받기</button>
+      </div>
+    </div>
+    <div class="reward-quit" id="rewardQuit" onclick="quitFromReward()">포기하고 결과 보기</div>
   </div>
 
   <div class="screen active" id="screenHome">
@@ -174,8 +199,8 @@ const FALLBACK=[
   ['9','여의도','국회의사당','샛강'],
 ];
 const MODES={
-  next:{id:'next',name:'다음역 맞추기',desc:'목숨 3개',color:'#3949AB',chosungRatio:0,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
-  chosung:{id:'chosung',name:'초성 퀴즈',desc:'목숨 3개',color:'#E65100',chosungRatio:1,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  next:{id:'next',name:'다음역 맞추기',desc:'하루 3번 도전',color:'#3949AB',chosungRatio:0,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
+  chosung:{id:'chosung',name:'초성 퀴즈',desc:'하루 3번 도전',color:'#E65100',chosungRatio:1,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
   daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 최고점 도전',color:'#00897B',chosungRatio:.5,lines:['1','2','3','4','5','6','7','8','9']},
 };
 const S={
@@ -186,6 +211,8 @@ const S={
   dailyScore:parseInt(localStorage.getItem('dScore')||'0'),
   hintCount:parseInt(localStorage.getItem('hC')||'3'),
   hintDate:localStorage.getItem('hDate')||'',
+  dailyLives:parseInt(localStorage.getItem('dL')||'3'),
+  dailyLivesDate:localStorage.getItem('dLD')||'',
   currentMode:null,questions:[],qIndex:0,correct:0,score:0,combo:0,lives:3,answered:false,
 };
 let STATIONS=[];
@@ -199,8 +226,18 @@ function save(){
   localStorage.setItem('dScore',S.dailyScore);
   localStorage.setItem('hC',S.hintCount);
   localStorage.setItem('hDate',S.hintDate);
+  localStorage.setItem('dL',S.dailyLives);
+  localStorage.setItem('dLD',S.dailyLivesDate);
 }
 function checkHintReset(){if(S.hintDate!==today()){S.hintCount=3;S.hintDate=today();save();}}
+function checkLivesReset(){
+  if(S.dailyLivesDate!==today()){
+    S.dailyLives=3;S.dailyLivesDate=today();save();
+  }
+}
+function getDailyLives(){checkLivesReset();return S.dailyLives;}
+function useDailyLife(){S.dailyLives=Math.max(0,S.dailyLives-1);save();}
+function addDailyLife(){S.dailyLives++;save();}
 
 async function loadStations(){
   try{const r=await fetch('stations.json');const d=await r.json();STATIONS=d.filter(s=>s[2]!=='-'&&s[3]!=='-');}
@@ -335,9 +372,11 @@ function miniMap(prev,next,color){
 
 function startMode(modeId){
   const mode=MODES[modeId];
+  if(modeId!=='daily'&&getDailyLives()<=0){showRewardAd();return;}
   S.currentMode=mode;
   S.questions=generateQuestions(mode,50);
-  S.qIndex=0;S.correct=0;S.score=0;S.combo=0;S.lives=3;S.answered=false;
+  S.qIndex=0;S.correct=0;S.score=0;S.combo=0;S.answered=false;
+  S.lives=getDailyLives();
   document.getElementById('quizModeName').textContent=mode.name;
   document.getElementById('quizModeDesc').textContent=mode.desc;
   document.getElementById('progFill').style.background=mode.color;
@@ -373,7 +412,8 @@ function renderQuestion(){
   document.getElementById('progText').textContent=`${S.qIndex+1}번째`;
   document.getElementById('progCorrect').textContent=`정답 ${S.correct}`;
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
-  document.getElementById('livesDisplay').innerHTML=isDaily?'':Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
+  const dl=getDailyLives();
+  document.getElementById('livesDisplay').innerHTML=isDaily?'':Array.from({length:3},(_,i)=>`<span>${i<dl?'❤️':'🖤'}</span>`).join('');
 
   const line=LINES[q.line]||{name:q.line+'호선',color:'#888'};
   const lc=line.color;
@@ -490,14 +530,14 @@ function handleResult(correct){
     if(S.combo>=2)showCombo(S.combo);
   }else{
     S.combo=0;
-    if(!isDaily)S.lives--;
+    if(!isDaily){useDailyLife();S.lives=getDailyLives();}
     if(fb){fb.className='feedback wrong';fb.textContent='❌ 틀렸어요';}
     if(!isDaily)document.getElementById('livesDisplay').innerHTML=Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
   }
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
   const isEnd=!isDaily&&S.lives<=0;
   setTimeout(()=>{
-    if(isEnd){showResult();return;}
+    if(isEnd){showRewardAd();return;}
     S.qIndex++;
     if(S.qIndex>=S.questions.length)S.questions=[...S.questions,...generateQuestions(S.currentMode,20)];
     renderQuestion();
@@ -524,6 +564,61 @@ function showResult(){
 
 function confirmQuit(){document.getElementById('confirmOverlay').style.display='flex';}
 function closeConfirm(ok){document.getElementById('confirmOverlay').style.display='none';if(ok)renderHome();}
+
+let _rewardTimer=null;
+function showRewardAd(){
+  const overlay=document.getElementById('rewardOverlay');
+  const btn=document.getElementById('rewardBtn');
+  const countdown=document.getElementById('rewardCountdown');
+  const quit=document.getElementById('rewardQuit');
+  const adArea=document.getElementById('rewardAdArea');
+
+  // 광고 삽입 (한 번만)
+  if(!adArea.hasChildNodes()){
+    const f=document.createElement('iframe');
+    f.src='ad_reward.html';
+    f.style.cssText='width:100%;height:120px;border:none;display:block';
+    f.scrolling='no';
+    adArea.appendChild(f);
+  }
+
+  btn.disabled=true;
+  quit.style.display='none';
+  overlay.style.display='flex';
+
+  let sec=5;
+  countdown.textContent=`${sec}초 후 목숨 받기 가능`;
+  _rewardTimer=setInterval(()=>{
+    sec--;
+    if(sec>0){
+      countdown.textContent=`${sec}초 후 목숨 받기 가능`;
+    }else{
+      clearInterval(_rewardTimer);
+      countdown.textContent='';
+      btn.disabled=false;
+      quit.style.display='block';
+    }
+  },1000);
+}
+
+function receiveLife(){
+  clearInterval(_rewardTimer);
+  document.getElementById('rewardOverlay').style.display='none';
+  addDailyLife();
+  S.lives=getDailyLives();
+  document.getElementById('livesDisplay').innerHTML=
+    Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
+  S.answered=false;
+  S.qIndex++;
+  if(S.qIndex>=S.questions.length)S.questions=[...S.questions,...generateQuestions(S.currentMode,20)];
+  renderQuestion();
+}
+
+function quitFromReward(){
+  clearInterval(_rewardTimer);
+  document.getElementById('rewardOverlay').style.display='none';
+  showResult();
+}
 function showCombo(n){
   const el=document.getElementById('comboInline');
   if(!el)return;
