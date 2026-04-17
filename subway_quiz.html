@@ -201,11 +201,15 @@ const FALLBACK=[
 const MODES={
   next:{id:'next',name:'다음역 맞추기',desc:'하루 3번 도전',color:'#3949AB',chosungRatio:0,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
   chosung:{id:'chosung',name:'초성 퀴즈',desc:'하루 3번 도전',color:'#E65100',chosungRatio:1,lines:['1','2','3','4','5','6','7','8','9','A','B','C','D','E','G']},
-  daily:{id:'daily',name:'데일리 챌린지',desc:'오늘의 최고점 도전',color:'#00897B',chosungRatio:.5,lines:['1','2','3','4','5','6','7','8','9']},
+  daily:{id:'daily',name:'데일리 챌린지',desc:'하루 3번 도전',color:'#00897B',chosungRatio:.5,lines:['1','2','3','4','5','6','7','8','9']},
 };
 const S={
   totalScore:parseInt(localStorage.getItem('tS')||'0'),
-  bestScore:parseInt(localStorage.getItem('bS')||'0'),
+  bestScore:{
+    next:    parseInt(localStorage.getItem('bS_next')||'0'),
+    chosung: parseInt(localStorage.getItem('bS_chosung')||'0'),
+    daily:   parseInt(localStorage.getItem('bS_daily')||'0'),
+  },
   totalPlayed:parseInt(localStorage.getItem('tP')||'0'),
   dailyDate:localStorage.getItem('dD')||'',
   dailyScore:parseInt(localStorage.getItem('dScore')||'0'),
@@ -220,7 +224,9 @@ let STATIONS=[];
 function today(){return new Date().toISOString().slice(0,10);}
 function save(){
   localStorage.setItem('tS',S.totalScore);
-  localStorage.setItem('bS',S.bestScore);
+  localStorage.setItem('bS_next',    S.bestScore.next);
+  localStorage.setItem('bS_chosung', S.bestScore.chosung);
+  localStorage.setItem('bS_daily',   S.bestScore.daily);
   localStorage.setItem('tP',S.totalPlayed);
   localStorage.setItem('dD',S.dailyDate);
   localStorage.setItem('dScore',S.dailyScore);
@@ -306,7 +312,9 @@ function renderHome(){
             <img src="subway_icon.png" width="28" height="28" style="border-radius:6px">
             <span style="font-size:17px;font-weight:700;color:#111">지하철 종결자</span>
           </div>
-          <div style="font-size:22px;font-weight:800;color:#111">${S.totalScore.toLocaleString()}점</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:18px">${Array.from({length:3},(_,i)=>`<span>${i<getDailyLives()?'❤️':'🖤'}</span>`).join('')}</div>
+          </div>
         </div>
       </div>
       <div style="position:relative;z-index:1;padding:20px 20px 28px">
@@ -321,7 +329,7 @@ function renderHome(){
         <div class="mc-icon">🚇</div>
         <div class="mc-row">
           <div class="mc-chip">4지선다</div>
-          <div class="mc-chip">❤️ 3개</div>
+          <div class="mc-chip">최고 ${S.bestScore.next.toLocaleString()}점</div>
         </div>
       </div>
       <div class="mode-card" style="background:linear-gradient(135deg,#BF360C,#E65100,#FF8A65);box-shadow:0 6px 24px rgba(230,81,0,.4)" onclick="startMode('chosung')">
@@ -330,7 +338,7 @@ function renderHome(){
         <div class="mc-icon">🔤</div>
         <div class="mc-row">
           <div class="mc-chip">글자 선택</div>
-          <div class="mc-chip">❤️ 3개</div>
+          <div class="mc-chip">최고 ${S.bestScore.chosung.toLocaleString()}점</div>
         </div>
       </div>
       <div class="daily-card" style="background:linear-gradient(135deg,#004D40,#00897B,#4DB6AC);box-shadow:0 6px 24px rgba(0,137,123,.4)" onclick="startMode('daily')">
@@ -341,8 +349,7 @@ function renderHome(){
         <div class="mc-icon">📅</div>
         <div class="mc-row">
           <div class="mc-chip">${today()}</div>
-          <div class="mc-chip">무제한</div>
-          ${S.dailyDate===today()&&S.dailyScore>0?'<div class="mc-chip">최고 '+S.dailyScore.toLocaleString()+'점</div>':''}
+          <div class="mc-chip">최고 ${(S.dailyDate===today()?S.dailyScore:S.bestScore.daily).toLocaleString()}점</div>
         </div>
       </div>
     </div>
@@ -370,9 +377,12 @@ function miniMap(prev,next,color){
   </div>`;
 }
 
+let _pendingModeId=null;
+
 function startMode(modeId){
   const mode=MODES[modeId];
-  if(modeId!=='daily'&&getDailyLives()<=0){showRewardAd();return;}
+  if(getDailyLives()<=0){_pendingModeId=modeId;showRewardAd();return;}
+  _pendingModeId=null;
   S.currentMode=mode;
   S.questions=generateQuestions(mode,50);
   S.qIndex=0;S.correct=0;S.score=0;S.combo=0;S.answered=false;
@@ -413,7 +423,7 @@ function renderQuestion(){
   document.getElementById('progCorrect').textContent=`정답 ${S.correct}`;
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
   const dl=getDailyLives();
-  document.getElementById('livesDisplay').innerHTML=isDaily?'':Array.from({length:3},(_,i)=>`<span>${i<dl?'❤️':'🖤'}</span>`).join('');
+  document.getElementById('livesDisplay').innerHTML=Array.from({length:3},(_,i)=>`<span>${i<dl?'❤️':'🖤'}</span>`).join('');
 
   const line=LINES[q.line]||{name:q.line+'호선',color:'#888'};
   const lc=line.color;
@@ -523,19 +533,20 @@ function handleResult(correct){
     S.correct++;S.combo++;
     const gained=100+Math.min(S.combo*10,50);
     S.score+=gained;S.totalScore+=gained;
-    if(S.score>S.bestScore)S.bestScore=S.score;
+    const modeId=S.currentMode.id;
+    if(S.score>S.bestScore[modeId])S.bestScore[modeId]=S.score;
     if(isDaily&&S.score>S.dailyScore){S.dailyScore=S.score;S.dailyDate=today();}
     save();
     if(fb){fb.className='feedback correct';fb.textContent=S.combo>=2?`🔥 ${S.combo}콤보! +${gained}점`:`✅ 정답! +${gained}점`;}
     if(S.combo>=2)showCombo(S.combo);
   }else{
     S.combo=0;
-    if(!isDaily){useDailyLife();S.lives=getDailyLives();}
+    useDailyLife();S.lives=getDailyLives();
     if(fb){fb.className='feedback wrong';fb.textContent='❌ 틀렸어요';}
-    if(!isDaily)document.getElementById('livesDisplay').innerHTML=Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
+    document.getElementById('livesDisplay').innerHTML=Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
   }
   document.getElementById('quizScore').textContent=S.score.toLocaleString();
-  const isEnd=!isDaily&&S.lives<=0;
+  const isEnd=S.lives<=0;
   setTimeout(()=>{
     if(isEnd){showRewardAd();return;}
     S.qIndex++;
@@ -545,7 +556,8 @@ function handleResult(correct){
 }
 
 function showResult(){
-  const isNewBest=S.score>=S.bestScore&&S.score>0;
+  const modeBest=S.bestScore[S.currentMode.id];
+  const isNewBest=S.score>=modeBest&&S.score>0;
   S.totalPlayed++;save();
   document.getElementById('resultWrap').innerHTML=`
     <div class="result-emoji">${S.lives<=0?'😢':'🎉'}</div>
@@ -553,7 +565,7 @@ function showResult(){
     <div class="result-sub">${S.correct}문제 정답 · ${S.qIndex}문제 도전</div>
     <div class="result-score">${S.score.toLocaleString()}</div>
     <div class="result-score-label">이번 점수</div>
-    <div class="result-best">${isNewBest?'🎉 <span>신기록!</span>':'최고 점수 <span>'+S.bestScore.toLocaleString()+'점</span>'}</div>
+    <div class="result-best">${isNewBest?'🎉 <span>신기록!</span>':'최고 점수 <span>'+modeBest.toLocaleString()+'점</span>'}</div>
     <div class="result-btns">
       <button class="btn-primary" onclick="startMode('`+S.currentMode.id+`')">다시 도전</button>
       <button class="btn-secondary" onclick="renderHome()">홈으로</button>
@@ -583,7 +595,7 @@ function showRewardAd(){
   }
 
   btn.disabled=true;
-  quit.style.display='none';
+  quit.style.display='block';
   overlay.style.display='flex';
 
   let sec=5;
@@ -606,18 +618,28 @@ function receiveLife(){
   document.getElementById('rewardOverlay').style.display='none';
   addDailyLife();
   S.lives=getDailyLives();
-  document.getElementById('livesDisplay').innerHTML=
-    Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
-  S.answered=false;
-  S.qIndex++;
-  if(S.qIndex>=S.questions.length)S.questions=[...S.questions,...generateQuestions(S.currentMode,20)];
-  renderQuestion();
+  if(_pendingModeId){
+    // 홈에서 목숨 없을 때 → 게임 새로 시작
+    const mid=_pendingModeId;
+    _pendingModeId=null;
+    startMode(mid);
+  }else{
+    // 게임 중 목숨 소진 → 이어서 진행
+    document.getElementById('livesDisplay').innerHTML=
+      Array.from({length:3},(_,i)=>`<span>${i<S.lives?'❤️':'🖤'}</span>`).join('');
+    S.answered=false;
+    S.qIndex++;
+    if(S.qIndex>=S.questions.length)S.questions=[...S.questions,...generateQuestions(S.currentMode,20)];
+    renderQuestion();
+  }
 }
 
 function quitFromReward(){
   clearInterval(_rewardTimer);
   document.getElementById('rewardOverlay').style.display='none';
-  showResult();
+  _pendingModeId=null;
+  if(S.currentMode&&S.questions.length>0){showResult();}
+  else{renderHome();}
 }
 function showCombo(n){
   const el=document.getElementById('comboInline');
